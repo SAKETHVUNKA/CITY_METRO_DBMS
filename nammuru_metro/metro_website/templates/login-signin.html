@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'Styles/login-signin.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'styles/logo.jpeg' %}" alt="Metro Logo">
+            </div>
+            <div class="metro-name">
+                Nammuru Metro
+            </div>
+            <div class="home-button">
+                <a href="#">Home</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="login-container">
+            <button class="login-button">Login</button>
+            <button class="signup-button">Sign Up</button>
+        </div>
+    </main>
+</body>
+</html>

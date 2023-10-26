@@ -1,0 +1,81 @@
+/* Reset default margin and padding for the page */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: white;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    margin: 5px black;
+}
+
+.logo img {
+    position: fixed;
+    height: 5vh;
+    top: 0px;
+    left: 0px;
+}
+
+.metro-name {
+    font-size: 24px;
+    color: black;
+}
+
+.home-button a {
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    margin: 30px;
+}
+
+.details-container {
+    border: 1px solid rgb(189, 189, 189);
+    box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
+    border-radius: 10px;
+    padding-top: 75px;
+    padding-bottom: 50px;
+    padding-left: 75px;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    text-align: center;
+}
+
+.nested-button {
+    width: 30vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+button:hover {
+    background-color: #333;
+}

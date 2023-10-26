@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'Styles/signin.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'styles/logo.jpeg' %}" alt="Metro Logo">
+            </div>
+            <div class="metro-name">
+                Nammuru Metro
+            </div>
+            <div class="home-button">
+                <a href="#">Home</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="form-container">
+            <form>
+                <div>
+                    <label for="userID">User ID:</label>
+                    <input type="text" id="userID" name="userID" required>
+                </div>
+
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div>
+                    <label for="otp">Phone Number:</label>
+                    <input type="text" id="otp" name="otp" required>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
