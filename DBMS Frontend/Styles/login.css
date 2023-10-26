@@ -1,0 +1,92 @@
+/* Reset default margin and padding for the page */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: white;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    margin: 5px black;
+}
+
+.logo img {
+    position: fixed;
+    height: 5vh;
+    top: 0px;
+    left: 0px;
+}
+
+.metro-name {
+    font-size: 24px;
+    color: black;
+}
+
+.home-button a {
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
+.form-container {
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+form {
+    display: inline-block;
+    display: flex;  
+    flex-direction: column;
+    border: 1px solid rgb(189, 189, 189);
+    box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
+    border-radius: 10px;
+    padding: 50px;
+}
+
+form div {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+label {
+    display: inline-block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+input {
+    display: inline-block;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 40px;
+    transition: background-color 0.15s;
+}
+
+button:hover {
+    background-color: #333;
+}
