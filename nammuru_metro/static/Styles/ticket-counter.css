@@ -63,7 +63,21 @@ main {
 .details-container div {
     width: 100%;
     display: flex;
+    flex-direction: column;
+}
+
+.details-container div div {
+    width: 100%;
+    display: flex;
     flex-direction: row;
+}
+
+.route-details {
+    font-size: 15px;
+    margin: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 select {
