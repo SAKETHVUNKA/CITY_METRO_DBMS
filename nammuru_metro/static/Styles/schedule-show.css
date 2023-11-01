@@ -79,3 +79,7 @@ main {
     display: flex;
     align-items: center;
 }
+
+.details-container > div > div:nth-child(-n+2) {
+    border-right: 1px solid rgb(189, 189, 189);
+}

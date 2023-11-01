@@ -44,6 +44,7 @@ main {
 }
 
 .details-container {
+    width: 30vw;
     border: 1px solid rgb(189, 189, 189);
     box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
     border-radius: 10px;
@@ -58,12 +59,28 @@ main {
     text-align: center;
 }
 
+.details-container div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .nested-button {
     width: 30vw;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
+}
+
+select, input {
+    margin-left: -400px;
+    height: 35px;
+    width: 250px;
+    border: 1px solid rgb(189, 189, 189);
+    box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
+    border-radius: 5px;
 }
 
 button {
