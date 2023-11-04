@@ -14,14 +14,14 @@
                 Nammuru Metro
             </div>
             <div class="home-button">
-                <a href="#">Home</a>
+                <a href="{% url 'home' %}">Home</a>
             </div>
         </nav>
     </header>
     <main>
         <div class="login-container">
-            <button class="login-button">Login</button>
-            <button class="signup-button">Sign Up</button>
+            <button class="login-button"><a href="{% url 'login' %}">Login</a></button>
+            <button class="signup-button"><a href="{% url 'signin' %}">Sign Up</a></button>
         </div>
     </main>
 </body>

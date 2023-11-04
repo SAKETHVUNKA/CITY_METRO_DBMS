@@ -14,7 +14,7 @@
                 Nammuru Metro
             </div>
             <div class="home-button">
-                <a href="#">Home</a>
+                <p>                                    </p>
             </div>
         </nav>
     </header>
@@ -22,18 +22,20 @@
         <div class="buttons-container">
             <div class="first-row">
                 <div></div>
-                <button>Login/Register</button>
-                <button>Schedule Information</button>
+                <button><a href="{% url 'login_signin' %}">Login/Register</a></button>
+                <button><a href="{% url 'schedule' %}">Schedule Information</a></button>
                 <div></div>
             </div>
 
             <div class="second-row">
-                <button>Line Info</button>
-                <button>Station Info</button>
-                <button>Find Route</button>
+                <button><a href="{% url 'line_info_details' %}">Line Info</a></button>
+                <button><a href="{% url 'station_info_details' %}">Station Info</a></button>
+                <button>Route Info</button>
             </div>
             </div>
         </div>
     </main>
 </body>
 </html>
+
+

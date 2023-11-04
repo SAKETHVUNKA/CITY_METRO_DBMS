@@ -66,3 +66,9 @@ def ticket_buy(request):
 def ticket_counter(request):
     template = loader.get_template('ticket-counter.html')
     return HttpResponse(template.render())
+
+# card recharge
+# ticket page
+# ticket use
+# entrance scan 
+# exit scan

@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('home', views.home, name='home'),
     path('card/', views.card, name='card'),
     path('home_admin/', views.home_admin, name='home_admin'),
     path('home_user/', views.home_user, name='home_user'),
@@ -19,3 +20,10 @@ urlpatterns = [
     path('ticket_buy/', views.ticket_buy, name='ticket_buy'),
     path('ticket_counter/', views.ticket_counter, name='ticket_counter'),
 ]
+
+# card recharge
+# ticket page
+# ticket use
+# entrance scan 
+# exit scan
+# show routes
