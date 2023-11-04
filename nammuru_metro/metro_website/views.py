@@ -98,6 +98,10 @@ def station_info(request):
     template = loader.get_template('station-info.html')
     return HttpResponse(template.render())
 
-# def show_routes(request):
-    # template = loader.get_template('show-routes.html')
-    # return HttpResponse(template.render())
+def show_routes(request):
+    template = loader.get_template('route-show.html')
+    return HttpResponse(template.render())
+
+def show_routes_details(request):
+    template = loader.get_template('route-show-details.html')
+    return HttpResponse(template.render())

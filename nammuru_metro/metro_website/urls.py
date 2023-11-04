@@ -19,7 +19,6 @@ urlpatterns = [
     path('station_info_details/', views.station_info_details, name='station_info_details'),
     path('ticket_buy/', views.ticket_buy, name='ticket_buy'),
     path('ticket_counter/', views.ticket_counter, name='ticket_counter'),
-    
     path('card_recharge/', views.card_recharge, name='card_recharge'),
     path('ticket_page/', views.ticket_page, name='ticket_page'),
     path('ticket_use/', views.ticket_use, name='ticket_use'),
@@ -27,5 +26,6 @@ urlpatterns = [
     path('exit_scan/', views.exit_scan, name='exit_scan'),
     path('line_info/', views.line_info, name='line_info'),
     path('station_info/', views.station_info, name='station_info'),
-    # path('show_routes/', views.show_routes, name='show_routes'),
+    path('show_routes/', views.show_routes, name='show_routes'),
+    path('show_routes_details/', views.show_routes_details, name='show_routes_details'),
 ]
