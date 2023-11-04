@@ -2,7 +2,7 @@
 <html>
 <head>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'Styles/login-signin.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Styles/ticket.css' %}">
 </head>
 <body>
     <header>
@@ -19,9 +19,12 @@
         </nav>
     </header>
     <main>
-        <div class="login-container">
-            <button class="login-button">Login</button>
-            <button class="signup-button">Sign Up</button>
+        <div class="form-container">
+            <form>
+                <button type="submit">Buy Ticket</button>
+
+                <button type="submit">Ticket History</button>
+            </form>
         </div>
     </main>
 </body>

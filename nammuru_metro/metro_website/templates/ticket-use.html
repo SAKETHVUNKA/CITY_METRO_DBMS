@@ -2,7 +2,7 @@
 <html>
 <head>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'Styles/station-info-details.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Styles/ticket-use.css' %}">
 </head>
 <body>
     <header>
@@ -20,32 +20,23 @@
     </header>
     <main>
         <div class="details-container">
+
             <div>
-                Station ID: xx
+                <div class="qr-code">
+                    <img src="QR.svg"/>
+                </div>
             </div>
 
             <div>
-                Station Name: xx
+                <div>From: xx</div>
+            </div>
+            
+            <div>
+                <div>To: xx</div>
             </div>
 
             <div>
-                Number of platforms: xx
-            </div>
-
-            <div>
-                Number of Visitors Yesterday: xx
-            </div>
-
-            <div>
-                Start Date: xx
-            </div>
-
-            <div>
-                Status: xx
-            </div>
-
-            <div>
-                Line Name: xx
+                <div>ID: xx</div>
             </div>
         </div>
     </main>

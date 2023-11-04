@@ -2,7 +2,7 @@
 <html>
 <head>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'Styles/station-info-details.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Styles/exit-scan.css' %}">
 </head>
 <body>
     <header>
@@ -21,31 +21,19 @@
     <main>
         <div class="details-container">
             <div>
-                Station ID: xx
+                QR scan: camera here
+                <div class="qr-code">
+                    <img src="QR.svg"/>
+                </div>
             </div>
 
             <div>
-                Station Name: xx
+                <div>ID: </div>
+                <input type="text">
             </div>
-
-            <div>
-                Number of platforms: xx
-            </div>
-
-            <div>
-                Number of Visitors Yesterday: xx
-            </div>
-
-            <div>
-                Start Date: xx
-            </div>
-
-            <div>
-                Status: xx
-            </div>
-
-            <div>
-                Line Name: xx
+           
+            <div class="nested-button">
+                <button>Check In</button>
             </div>
         </div>
     </main>

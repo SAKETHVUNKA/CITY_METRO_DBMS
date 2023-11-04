@@ -2,7 +2,7 @@
 <html>
 <head>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'Styles/login-signin.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Styles/station-info.css' %}">
 </head>
 <body>
     <header>
@@ -19,9 +19,15 @@
         </nav>
     </header>
     <main>
-        <div class="login-container">
-            <button class="login-button">Login</button>
-            <button class="signup-button">Sign Up</button>
+        <div class="form-container">
+            <form>
+                <div>
+                    <label for="stationID">Station: </label>
+                    <input type="text" id="stationID" name="stationID" required>
+                </div>
+
+                <button type="submit">Show</button>
+            </form>
         </div>
     </main>
 </body>
