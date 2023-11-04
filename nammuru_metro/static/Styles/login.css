@@ -47,7 +47,7 @@ body {
 
 form {
     display: inline-block;
-    display: flex;  
+    display: flex;
     flex-direction: column;
     border: 1px solid rgb(189, 189, 189);
     box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
@@ -57,14 +57,13 @@ form {
 
 form div {
     display: flex;
-    justify-content: right;
+    justify-content: space-between;
     align-items: center;
 }
 
 label {
     display: inline-block;
     font-weight: bold;
-    margin-bottom: 10px;
     margin-right: 10px;
 }
 
@@ -89,4 +88,15 @@ button {
 
 button:hover {
     background-color: #333;
+}
+
+.OTP-button {
+    margin-top: 0px;
+    color: black;
+    margin-left: 10px;
+    background-color: #dbd9d9;
+}
+
+.OTP-button:hover {
+    background-color: #b8b8b8;
 }

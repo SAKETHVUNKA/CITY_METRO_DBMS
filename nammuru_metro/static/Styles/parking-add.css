@@ -78,7 +78,7 @@ main {
 input {
     margin-left: -400px;
     height: 35px;
-    width: 250px;
+    width: 50%;
     border: 1px solid rgb(189, 189, 189);
     box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
     border-radius: 5px;
@@ -96,4 +96,15 @@ button {
 
 button:hover {
     background-color: #333;
+}
+
+.OTP-button {
+    color: black;
+    margin-left: 10px;
+    margin-right: 60px;
+    background-color: #dbd9d9;
+}
+
+.OTP-button:hover {
+    background-color: #b8b8b8;
 }
