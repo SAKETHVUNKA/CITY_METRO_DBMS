@@ -19,11 +19,13 @@ urlpatterns = [
     path('station_info_details/', views.station_info_details, name='station_info_details'),
     path('ticket_buy/', views.ticket_buy, name='ticket_buy'),
     path('ticket_counter/', views.ticket_counter, name='ticket_counter'),
+    
+    path('card_recharge/', views.card_recharge, name='card_recharge'),
+    path('ticket_page/', views.ticket_page, name='ticket_page'),
+    path('ticket_use/', views.ticket_use, name='ticket_use'),
+    path('entrance_scan/', views.entrance_scan, name='entrance_scan'),
+    path('exit_scan/', views.exit_scan, name='exit_scan'),
+    path('line_info/', views.line_info, name='line_info'),
+    path('station_info/', views.station_info, name='station_info'),
+    # path('show_routes/', views.show_routes, name='show_routes'),
 ]
-
-# card recharge
-# ticket page
-# ticket use
-# entrance scan 
-# exit scan
-# show routes

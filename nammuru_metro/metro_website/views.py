@@ -67,8 +67,37 @@ def ticket_counter(request):
     template = loader.get_template('ticket-counter.html')
     return HttpResponse(template.render())
 
-# card recharge
-# ticket page
-# ticket use
-# entrance scan 
-# exit scan
+
+
+
+def card_recharge(request):
+    template = loader.get_template('card-recharge.html')
+    return HttpResponse(template.render())
+
+def ticket_page(request):
+    template = loader.get_template('ticket.html')
+    return HttpResponse(template.render())
+
+def ticket_use(request):
+    template = loader.get_template('ticket-use.html')
+    return HttpResponse(template.render())
+
+def entrance_scan(request):
+    template = loader.get_template('entrance-scan.html')
+    return HttpResponse(template.render())
+
+def exit_scan(request):
+    template = loader.get_template('exit-scan.html')
+    return HttpResponse(template.render())
+
+def line_info(request):
+    template = loader.get_template('line-info.html')
+    return HttpResponse(template.render())
+
+def station_info(request):
+    template = loader.get_template('station-info.html')
+    return HttpResponse(template.render())
+
+# def show_routes(request):
+    # template = loader.get_template('show-routes.html')
+    # return HttpResponse(template.render())
