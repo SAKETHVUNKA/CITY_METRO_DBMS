@@ -37,59 +37,49 @@ body {
     color: black;
 }
 
-.form-container {
+main {
     height: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
 }
 
-form {
-    display: inline-block;
-    display: flex;
-    flex-direction: column;
+.details-container {
+    padding-left: 55px;
+    padding-right: 55px;
+    overflow-y: scroll;
     border: 1px solid rgb(189, 189, 189);
     box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
     border-radius: 10px;
-    padding: 50px;
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
-form div {
+.details-container > div {
+    font-family: Arial, sans-serif;
+    border: 1px solid rgb(189, 189, 189);
+    box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+
     display: flex;
     justify-content: space-between;
+}
+
+.details-container > div > div {
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 50px;
+    display: flex;
     align-items: center;
 }
 
-label {
-    display: inline-block;
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-select {
-    display: inline-block;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-    height: 35px;
-    width: 100%;
-    border: 1px solid rgb(189, 189, 189);
-    box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
-    border-radius: 5px;
-}
-
-button {
-    background-color: black;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 40px;
-    transition: background-color 0.15s;
-}
-
-button:hover {
-    background-color: #333;
+.details-container > div > div:nth-child(-n+2) {
+    border-right: 1px solid rgb(189, 189, 189);
 }

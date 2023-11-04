@@ -73,7 +73,7 @@ select {
     margin: 5px 0;
     border-radius: 5px;
     height: 35px;
-    width: 100%;
+    width: 50%;
     border: 1px solid rgb(189, 189, 189);
     box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
     border-radius: 5px;

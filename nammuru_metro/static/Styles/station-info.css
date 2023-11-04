@@ -46,7 +46,6 @@ body {
 }
 
 form {
-    display: inline-block;
     display: flex;
     flex-direction: column;
     border: 1px solid rgb(189, 189, 189);
@@ -67,11 +66,15 @@ label {
     margin-right: 10px;
 }
 
-input {
+select {
     display: inline-block;
     padding: 10px;
     margin: 5px 0;
-    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 35px;
+    width: 100%;
+    border: 1px solid rgb(189, 189, 189);
+    box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
     border-radius: 5px;
 }
 

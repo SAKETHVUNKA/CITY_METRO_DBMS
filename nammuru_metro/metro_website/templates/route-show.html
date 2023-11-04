@@ -2,13 +2,13 @@
 <html>
 <head>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'Styles/line-info.css' %}">
+    <link rel="stylesheet" type="text/css" href="Styles/route-show.css">
 </head>
 <body>
     <header>
         <nav class="navbar">
             <div class="logo">
-                <img src="{% static 'styles/logo.jpeg' %}" alt="Metro Logo">
+                <img src="styles/logo.jpeg" alt="Metro Logo">
             </div>
             <div class="metro-name">
                 Nammuru Metro
@@ -22,7 +22,17 @@
         <div class="form-container">
             <form>
                 <div>
-                    <label for="lineID">Line: </label>
+                    <label for="entry-stationID">Entry Station: </label>
+                    <select name="from" id="from">
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="exit-stationID">Exit Station: </label>
                     <select name="from" id="from">
                         <option value="volvo">Volvo</option>
                         <option value="saab">Saab</option>

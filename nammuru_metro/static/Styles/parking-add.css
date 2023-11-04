@@ -75,7 +75,7 @@ main {
     font-family: Arial, sans-serif;
 }
 
-input {
+input, select {
     margin-left: -400px;
     height: 35px;
     width: 50%;
