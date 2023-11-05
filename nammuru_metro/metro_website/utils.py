@@ -4,6 +4,7 @@ import uuid
 from datetime import datetime,date
 import qrcode
 from io import BytesIO
+import networkx as nx
 
 def getLineInfo(line_colour):
     conn = mysql.connector.connect(
@@ -220,3 +221,58 @@ def insert_parking(station_id, user_id, vehicle_number, fee):
     finally:
         cursor.close()
         db.close()
+        
+def find_routes(start_station, end_station):
+    # Connect to the MySQL database
+    db = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="Saketh$12485",
+        database="metro1"
+    )
+
+    cursor = db.cursor()
+
+    # Fetch data from the MySQL table (replace 'your_table' with your table name)
+    query = "SELECT start_station, end_station, price, duration FROM route"
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    # Create a directed graph to represent the stations and connections
+    G = nx.DiGraph()
+
+    for row in rows:
+        G.add_edge(row[0], row[1], price=row[2], duration=row[3])
+
+    # Find all simple paths between the start and end station
+    all_paths = list(nx.all_simple_paths(G, source=start_station, target=end_station))
+
+    path_details = []
+
+    # Calculate details for each path
+    for path in all_paths:
+        total_price = 0
+        
+        from datetime import datetime
+        current_time = datetime.now()
+        total_duration = current_time-current_time
+        num_stations = len(path) - 1
+
+        for i in range(len(path) - 1):
+            total_price += G[path[i]][path[i+1]]['price']
+            total_duration += G[path[i]][path[i+1]]['duration']
+
+        path_details.append({
+            "start_station": start_station,
+            "end_station": end_station,
+            "stations_between": num_stations,
+            "price": total_price,
+            "duration": total_duration,
+            "path": path
+        })
+
+    cursor.close()
+    db.close()
+
+    path_details=pd.DataFrame(path_details)
+    return path_details
