@@ -131,10 +131,34 @@ def insert_user_and_rider_card(user_id, user_password, mobile_number, parking_id
         connection.close()
         
         
-def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purchase):
+def check_balance(p_Ticket_Price, p_card_id):
+    # Establish a MySQL database connection
+    conn = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="Saketh$12485",
+        database="metro1"
+    )
+
+    # Create a cursor
+    cursor = conn.cursor()
+
+    # Check if the card has sufficient balance for the ticket
+    cursor.execute("SELECT Card_Balance FROM rider_card WHERE Card_ID = %s", (p_card_id,))
+    card_balance = cursor.fetchone()
+
+    if card_balance is not None and card_balance[0] >= p_Ticket_Price:
+        cursor.close()
+        conn.close()
+        return True
+    else:
+        cursor.close()
+        conn.close()
+        return False
+
+def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purchase, p_card_id=None):
     # Generate a unique Ticket_ID using uuid
     p_Ticket_ID = str(uuid.uuid4())
-
     # Default values for Entry_Time and Exit_Time are NULL
     p_Entry_Time = None
     p_Exit_Time = None
@@ -144,7 +168,12 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
 
     # Check if Start_Station and End_Station are the same
     if p_Start_Station == p_End_Station:
-        return("Error: Start and End stations cannot be the same.")
+        return "Error: Start and End stations cannot be the same."
+
+    # Check if the purchase mode is 'card'
+    if p_Mode_of_Purchase == 'card':
+        if not check_balance(p_Ticket_Price, p_card_id):
+            return "Error: Insufficient balance on the card for this ticket purchase."
 
     # Establish a MySQL database connection
     conn = mysql.connector.connect(
@@ -157,16 +186,32 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
     # Create a cursor
     cursor = conn.cursor()
 
-    # Call the stored procedure
+    # Create a QR code based on Ticket_ID
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(p_Ticket_ID)
+    qr.make(fit=True)
+
+    # Generate the QR code as bytes
+    img = qr.make_image(fill_color="black", back_color="white")
+    qr_code_bytes = BytesIO()
+    img.save(qr_code_bytes, format="PNG")
+    qr_code_bytes = qr_code_bytes.getvalue()
+
+    # Call the stored procedure to insert the ticket (deduction of balance handled elsewhere)
     try:
-        cursor.callproc('InsertTicket', (p_Ticket_ID, p_Ticket_Price, p_Entry_Time, p_Exit_Time, p_Date_of_Purchase, p_Start_Station, p_End_Station, p_Mode_of_Purchase))
+        cursor.callproc('InsertTicket', (p_Ticket_ID, p_Ticket_Price, p_Entry_Time, p_Exit_Time, p_Date_of_Purchase, p_Start_Station, p_End_Station, p_Mode_of_Purchase, p_card_id, qr_code_bytes))
         conn.commit()
-        print("Ticket inserted successfully with Ticket_ID:", p_Ticket_ID)
+        return("Ticket inserted successfully with Ticket_ID:", p_Ticket_ID)
     except mysql.connector.Error as err:
-        print("Error: ", err)
+        return("Error: ", err)
     finally:
         cursor.close()
-        conn.close()    
+        conn.close()
         
 def generate_unique_parking_id():
     # Generate a unique Parking_ID using UUID
@@ -276,3 +321,117 @@ def find_routes(start_station, end_station):
 
     path_details=pd.DataFrame(path_details)
     return path_details
+
+def update_parking_status(parking_id):
+    # Connect to the MySQL database
+    db = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="Saketh$12485",
+        database="metro1"
+    )
+
+    cursor = db.cursor()
+
+    # Set the new status to "completed"
+    new_status = 0
+
+    # Prepare and execute the SQL update query
+    try:
+        update_query = "UPDATE parking SET Status = %s WHERE Parking_ID = %s"
+        cursor.execute(update_query, (new_status, parking_id))
+        db.commit()
+        return "Parking record status updated to 'completed' successfully."
+    except Exception as e:
+        db.rollback()
+        return f"Error: {e}"
+    finally:
+        cursor.close()
+        db.close()
+        
+def update_exit_time(ticket_id):
+    # Establish a MySQL database connection
+    conn = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="Saketh$12485",
+        database="metro1"
+    )
+
+    # Create a cursor
+    cursor = conn.cursor()
+
+    # Check if Entry_Time exists for the specified ticket
+    entry_time_query = "SELECT Entry_Time FROM ticket WHERE Ticket_ID = %s"
+    cursor.execute(entry_time_query, (ticket_id,))
+    entry_time = cursor.fetchone()
+    print(entry_time)
+    if entry_time == (None,):
+        print("Error: Entry_Time is not set for Ticket_ID:", ticket_id)
+        return
+
+    # Get the current time
+    exit_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Call the stored procedure to update the Exit_Time
+    try:
+        cursor.callproc('UpdateExitTime', (ticket_id, exit_time))
+        conn.commit()
+        print("Exit time updated successfully for Ticket_ID:", ticket_id)
+    except mysql.connector.Error as err:
+        print("Error: ", err)
+    finally:
+        cursor.close()
+        conn.close()
+        
+def update_entry_time(ticket_id):
+    # Get the current time
+    entry_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Establish a MySQL database connection
+    conn = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="Saketh$12485",
+        database="metro1"
+    )
+
+    # Create a cursor
+    cursor = conn.cursor()
+
+    # Call the stored procedure to update the Entry_Time
+    try:
+        cursor.callproc('UpdateEntryTime', (ticket_id, entry_time))
+        conn.commit()
+        print("Entry time updated successfully for Ticket_ID:", ticket_id)
+    except mysql.connector.Error as err:
+        print("Error: ", err)
+    finally:
+        cursor.close()
+        conn.close()
+        
+def increment_card_balance(card_id, amount_to_add):
+    try:
+        # Establish a MySQL database connection
+        conn = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="Saketh$12485",
+            database="metro1"
+        )
+
+        # Create a cursor
+        cursor = conn.cursor()
+
+        # Call the stored procedure
+        cursor.callproc('IncrementCardBalance', (card_id, amount_to_add))
+
+        # Commit the changes
+        conn.commit()
+        print(f"Card balance updated successfully for Card_ID {card_id}. Added: ${amount_to_add}")
+
+    except mysql.connector.Error as err:
+        print("Error:", err)
+    finally:
+        cursor.close()
+        conn.close()
