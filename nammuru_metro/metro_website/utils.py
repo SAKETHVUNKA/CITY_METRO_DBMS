@@ -1,7 +1,9 @@
 import mysql.connector
 import pandas as pd
 import uuid
-from datetime import datetime
+from datetime import datetime,date
+import qrcode
+from io import BytesIO
 
 def getLineInfo(line_colour):
     conn = mysql.connector.connect(
@@ -126,3 +128,95 @@ def insert_user_and_rider_card(user_id, user_password, mobile_number, parking_id
     finally:
         cursor.close()
         connection.close()
+        
+        
+def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purchase):
+    # Generate a unique Ticket_ID using uuid
+    p_Ticket_ID = str(uuid.uuid4())
+
+    # Default values for Entry_Time and Exit_Time are NULL
+    p_Entry_Time = None
+    p_Exit_Time = None
+
+    # Set Date_of_Purchase as the current day's date
+    p_Date_of_Purchase = date.today().strftime("%Y-%m-%d")
+
+    # Check if Start_Station and End_Station are the same
+    if p_Start_Station == p_End_Station:
+        return("Error: Start and End stations cannot be the same.")
+
+    # Establish a MySQL database connection
+    conn = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="Saketh$12485",
+        database="metro1"
+    )
+
+    # Create a cursor
+    cursor = conn.cursor()
+
+    # Call the stored procedure
+    try:
+        cursor.callproc('InsertTicket', (p_Ticket_ID, p_Ticket_Price, p_Entry_Time, p_Exit_Time, p_Date_of_Purchase, p_Start_Station, p_End_Station, p_Mode_of_Purchase))
+        conn.commit()
+        print("Ticket inserted successfully with Ticket_ID:", p_Ticket_ID)
+    except mysql.connector.Error as err:
+        print("Error: ", err)
+    finally:
+        cursor.close()
+        conn.close()    
+        
+def generate_unique_parking_id():
+    # Generate a unique Parking_ID using UUID
+    return str(uuid.uuid4())
+
+def generate_qr_code(data):
+    # Generate a QR code from the provided data
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    img_bytes = BytesIO()
+    img.save(img_bytes, format="PNG")
+    return img_bytes.getvalue()
+
+def insert_parking(station_id, user_id, vehicle_number, fee):
+    # Connect to the MySQL database
+    db = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="Saketh$12485",
+        database="metro1"
+    )
+
+    cursor = db.cursor()
+
+    # Generate a unique Parking_ID
+    parking_id = generate_unique_parking_id()
+
+    # Generate a default QR Code from the unique Parking_ID
+    qr_code = generate_qr_code(parking_id)
+
+    # Get the current timestamp
+    timestamp = datetime.now()
+
+    # Set the default status to active
+    status = 1
+
+    # Prepare and call the stored procedure
+    try:
+        cursor.callproc('InsertParking', (parking_id, fee, timestamp, status, qr_code, station_id, user_id, vehicle_number))
+        db.commit()
+        return "Parking record inserted successfully."
+    except Exception as e:
+        db.rollback()
+        return f"Error: {e}"
+    finally:
+        cursor.close()
+        db.close()
