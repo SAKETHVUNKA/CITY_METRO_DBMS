@@ -5,6 +5,9 @@ from datetime import datetime,date
 import qrcode
 from io import BytesIO
 import networkx as nx
+import random
+import string
+from twilio.rest import Client
 
 def getLineInfo(line_colour):
     conn = mysql.connector.connect(
@@ -365,10 +368,8 @@ def update_exit_time(ticket_id):
     entry_time_query = "SELECT Entry_Time FROM ticket WHERE Ticket_ID = %s"
     cursor.execute(entry_time_query, (ticket_id,))
     entry_time = cursor.fetchone()
-    print(entry_time)
     if entry_time == (None,):
-        print("Error: Entry_Time is not set for Ticket_ID:", ticket_id)
-        return
+        return("Error: Entry_Time is not set for Ticket_ID:", ticket_id)
 
     # Get the current time
     exit_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -377,9 +378,9 @@ def update_exit_time(ticket_id):
     try:
         cursor.callproc('UpdateExitTime', (ticket_id, exit_time))
         conn.commit()
-        print("Exit time updated successfully for Ticket_ID:", ticket_id)
+        return("Exit time updated successfully for Ticket_ID:", ticket_id)
     except mysql.connector.Error as err:
-        print("Error: ", err)
+        return("Error: ", err)
     finally:
         cursor.close()
         conn.close()
@@ -403,9 +404,9 @@ def update_entry_time(ticket_id):
     try:
         cursor.callproc('UpdateEntryTime', (ticket_id, entry_time))
         conn.commit()
-        print("Entry time updated successfully for Ticket_ID:", ticket_id)
+        return("Entry time updated successfully for Ticket_ID:", ticket_id)
     except mysql.connector.Error as err:
-        print("Error: ", err)
+        return("Error: ", err)
     finally:
         cursor.close()
         conn.close()
@@ -428,10 +429,136 @@ def increment_card_balance(card_id, amount_to_add):
 
         # Commit the changes
         conn.commit()
-        print(f"Card balance updated successfully for Card_ID {card_id}. Added: ${amount_to_add}")
+        return(f"Card balance updated successfully for Card_ID {card_id}. Added: ${amount_to_add}")
 
     except mysql.connector.Error as err:
-        print("Error:", err)
+        return("Error:", err)
     finally:
         cursor.close()
         conn.close()
+        
+def fetch_card_details_by_user_id(user_id):
+    try:
+        # Establish a connection to the local MySQL server
+        connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="Saketh$12485",
+            database="metro1"
+        )
+
+        cursor = connection.cursor()
+
+        # Call the stored procedure
+        cursor.callproc('FetchCardDetailsByUserID', [user_id])
+
+        # Fetch the results
+        for result in cursor.stored_results():
+            card_details = result.fetchall()
+
+        # Create a Pandas DataFrame from the fetched data
+        if card_details:
+            # columns = [desc[0] for desc in cursor.description]
+            df = pd.DataFrame(card_details, columns=["Card_ID","Card_Balance","Last_Recharge_Amount","Last_Recharge_Time","Total_Savings","Number_Of_Trips"])
+            return df
+        else:
+            return("Card doesn't exist .")
+
+    except mysql.connector.Error as err:
+        return(f"Error: {err}")
+    finally:
+        cursor.close()
+        connection.close()
+        
+def call_fetch_parking_details(user_id):
+    try:
+        # Establish a connection to the local MySQL server
+        connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="Saketh$12485",
+            database="metro1"
+        )
+
+        cursor = connection.cursor()
+
+        # Call the stored procedure and pass the user_id as a parameter
+        cursor.callproc('FetchParkingDetails', [user_id])
+
+        # Fetch the result from the procedure
+        results = cursor.stored_results()
+        for result in results:
+            rows = result.fetchall()
+
+        # Create a Pandas DataFrame from the fetched data
+        if rows:
+            # columns = [desc[0] for desc in cursor.description]
+            df = pd.DataFrame(rows,columns=["Parking_ID","Fee","TimeStamp","Status","QR Code","Station_id","Vehicle Number"])
+            return df
+        else:
+            return("Parking doesn't exist .")
+
+    except mysql.connector.Error as err:
+        return("Error:", err)
+    finally:
+        cursor.close()
+        connection.close()
+        
+def generate_otp():
+    digits = string.digits
+    otp = ''.join(random.choice(digits) for _ in range(6))
+    return otp
+
+def send_otp_via_sms(phone_number, otp):
+    account_sid = 'AC53cbce7e65f2914a4e0c9682269d66c5'
+    auth_token = 'fea8f9651055e72642cd6a12d777d5fb'
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+        to=phone_number,
+        from_='+12512570659',
+        body=f'Your OTP is: {otp}'
+    )
+    
+# Function to check user credentials and send OTP
+def check_credentials_and_send_otp(user_id, user_password):
+    try:
+        # Establish a connection to the local MySQL server
+        connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="Saketh$12485",
+            database="metro1"
+        )
+
+        cursor = connection.cursor(buffered=True)
+
+        # Call the stored procedure to check user credentials and retrieve information
+        cursor.callproc('CheckUserCredentials', [user_id, user_password])
+        connection.commit()
+
+        # Fetch the result
+        for result in cursor.stored_results():
+            result_set = result.fetchall()
+            if result_set:
+                row = result_set[0]
+                if 'Invalid Credentials' not in row:
+                    user_id = row[0]  # Assuming the email address is the same as the username.
+                    phone_number = row[1]
+                    is_user = row[2]
+                    phone_number = '+91' + str(phone_number)
+                    # Generate an OTP
+                    otp = generate_otp()
+
+                    # Send OTP via Gmail
+                    send_otp_via_sms(phone_number,otp)
+                    
+                    return otp, user_id, is_user
+                else:
+                    return "Invalid Credentials", None, None
+
+    except mysql.connector.Error as err:
+        return str(err), None, None
+    finally:
+        cursor.close()
+        connection.close()
