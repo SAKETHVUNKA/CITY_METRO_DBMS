@@ -2,19 +2,19 @@
 <html>
 <head>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="Styles/route-show.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'Styles/route-show.css' %}">
 </head>
 <body>
     <header>
         <nav class="navbar">
             <div class="logo">
-                <img src="styles/logo.jpeg" alt="Metro Logo">
+                <img src="{% static 'styles/logo.jpeg' %}" alt="Metro Logo">
             </div>
             <div class="metro-name">
                 Nammuru Metro
             </div>
             <div class="home-button">
-                <a href="#">Home</a>
+                <a href="/">Home</a>
             </div>
         </nav>
     </header>

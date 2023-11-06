@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from .forms import RegistrationForm, LoginForm
 from .models import CustomUser
+from .utils import *
 
 
 from django.contrib.auth.hashers import check_password
@@ -53,7 +54,7 @@ def register_user(request):
                 # You can add a login session here if you want to automatically log in the user after registration.
 
                 # Redirect to a success page or dashboard after registration
-                return redirect('schedule')  # Adjust 'dashboard' to your actual URL name
+                return redirect('home_user')  # Adjust 'dashboard' to your actual URL name
             else:
                 # Passwords don't match, handle the error
                 form.add_error('password1', 'Passwords do not match')
@@ -81,7 +82,7 @@ def user_login(request):
                 print("Passwords match!")  # Debugging
                 # Passwords match, so log in the user
                 request.session['user_id'] = user.id  # You can store the user's ID in the session
-                return redirect('schedule')  # Redirect to a dashboard page on successful login
+                return redirect('home_user')  # Redirect to a dashboard page on successful login
             else:
                 print("Passwords don't match!")  # Debugging
                 # Passwords don't match, you can handle this by adding an error message
@@ -131,9 +132,6 @@ def ticket_buy(request):
 def ticket_counter(request):
     template = loader.get_template('ticket-counter.html')
     return HttpResponse(template.render())
-
-
-
 
 def card_recharge(request):
     template = loader.get_template('card-recharge.html')
