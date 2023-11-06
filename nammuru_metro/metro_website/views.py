@@ -1,6 +1,14 @@
 # from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from .forms import RegistrationForm, LoginForm
+from .models import CustomUser
+
+
+from django.contrib.auth.hashers import check_password
 
 # Create your views here.
 def home(request):
@@ -26,6 +34,63 @@ def line_info_details(request):
 def login(request):
     template = loader.get_template('login.html')
     return HttpResponse(template.render())
+
+def register_user(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            # Check if passwords match
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+            if password1 == password2:
+                username = form.cleaned_data['username']
+                phone = form.cleaned_data['phone']
+
+                # Create the user and set the password
+                user = CustomUser.objects.create_user(username=username, password=password1, phone=phone)
+
+                # Additional logic, e.g., login the user or redirect to a dashboard page on successful registration
+                # You can add a login session here if you want to automatically log in the user after registration.
+
+                # Redirect to a success page or dashboard after registration
+                return redirect('schedule')  # Adjust 'dashboard' to your actual URL name
+            else:
+                # Passwords don't match, handle the error
+                form.add_error('password1', 'Passwords do not match')
+
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'signup.html', {'form': form})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            try:
+                user = CustomUser.objects.get(username=username)
+                print(user)  # Debugging
+            except CustomUser.DoesNotExist:
+                user = None
+
+            if user and check_password(password, user.password):
+                print("Passwords match!")  # Debugging
+                # Passwords match, so log in the user
+                request.session['user_id'] = user.id  # You can store the user's ID in the session
+                return redirect('schedule')  # Redirect to a dashboard page on successful login
+            else:
+                print("Passwords don't match!")  # Debugging
+                # Passwords don't match, you can handle this by adding an error message
+                form.add_error(None, 'Invalid username or password')
+
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', {'form': form})
 
 def login_signin(request):
     template = loader.get_template('login-signin.html')

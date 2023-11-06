@@ -8,7 +8,8 @@ urlpatterns = [
     path('home_admin/', views.home_admin, name='home_admin'),
     path('home_user/', views.home_user, name='home_user'),
     path('line_info_details/', views.line_info_details, name='line_info_details'),
-    path('login/', views.login, name='login'),
+    path('register/', views.register_user, name='register_user'),
+    path('login/', views.user_login, name='user_login'),
     path('login_signin/', views.login_signin, name='login_signin'),
     path('parking/', views.parking, name='parking'),
     path('parking_add/', views.parking_add, name='parking_add'),
@@ -29,3 +30,6 @@ urlpatterns = [
     path('show_routes/', views.show_routes, name='show_routes'),
     path('show_routes_details/', views.show_routes_details, name='show_routes_details'),
 ]
+
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
