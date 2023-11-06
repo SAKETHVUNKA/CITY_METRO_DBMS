@@ -167,7 +167,7 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
     p_Exit_Time = None
 
     # Set Date_of_Purchase as the current day's date
-    p_Date_of_Purchase = date.today().strftime("%Y-%m-%d")
+    p_Date_of_Purchase = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Check if Start_Station and End_Station are the same
     if p_Start_Station == p_End_Station:
