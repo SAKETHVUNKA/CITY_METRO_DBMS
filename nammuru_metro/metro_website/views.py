@@ -3,36 +3,52 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from .forms import *
 from .models import CustomUser
 from .utils import *
-
-
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth.models import User
 
 # Create your views here.
 def home(request):
-    template = loader.get_template('home.html')
-    return HttpResponse(template.render())
+    logout(request)
+    return render(request, 'home.html')
 
 def card(request):
-    template = loader.get_template('card.html')
-    return HttpResponse(template.render())
+    user_id = request.user.username
+    cardDetes = fetch_card_details_by_user_id(user_id)
+    lastTrip = get_most_recent_ticket(user_id)
+    return render(request, 'card.html', {'cardDetes': cardDetes,'lastTrip':lastTrip})
 
 def home_admin(request):
-    template = loader.get_template('home-admin.html')
-    return HttpResponse(template.render())
+    return render(request, 'home-admin.html')
 
 def home_user(request):
-    template = loader.get_template('home-user.html')
-    return HttpResponse(template.render())
+    return render(request, 'home-user.html')
 
-def login(request):
-    template = loader.get_template('login.html')
-    return HttpResponse(template.render())
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
 
-def register_user(request):
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                # User credentials are valid, log in the user
+                login(request, user)
+                return redirect('home_user')  # Redirect to a dashboard page on successful login
+            else:
+                form.add_error(None, 'Invalid username or password')
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', {'form': form})
+
+
+def signup(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -43,17 +59,18 @@ def register_user(request):
                 username = form.cleaned_data['username']
                 phone = form.cleaned_data['phone']
 
-                # Create the user and set the password
-                user = CustomUser.objects.create_user(username=username, password=password1, phone=phone)
+                user = User.objects.create_user(username=username, password=password1)
 
-                # Additional logic, e.g., login the user or redirect to a dashboard page on successful registration
-                # You can add a login session here if you want to automatically log in the user after registration.
+                user = authenticate(request, username=username, password=password1)
 
-                # Redirect to a success page or dashboard after registration
-                return redirect('home_user')  # Adjust 'dashboard' to your actual URL name
-            else:
-                # Passwords don't match, handle the error
-                form.add_error('password1', 'Passwords do not match')
+                if user is not None:
+                    login(request, user)
+
+                    insert_user_and_rider_card(username, password1, phone)
+
+                    return redirect('home_user') 
+                else:
+                    print(f"Authentication failed for username: {username}")
 
     else:
         form = RegistrationForm()
@@ -61,89 +78,58 @@ def register_user(request):
     return render(request, 'signup.html', {'form': form})
 
 
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-
-            try:
-                user = CustomUser.objects.get(username=username)
-                # print(user)  # Debugging
-            except CustomUser.DoesNotExist:
-                user = None
-
-            if user and check_password(password, user.password):
-                # print("Passwords match!")  # Debugging
-                # Passwords match, so log in the user
-                request.session['user_id'] = user.id  # You can store the user's ID in the session
-                return redirect('home_user')  # Redirect to a dashboard page on successful login
-            else:
-                print("Passwords don't match!")  # Debugging
-                # Passwords don't match, you can handle this by adding an error message
-                form.add_error(None, 'Invalid username or password')
-
-    else:
-        form = LoginForm()
-
-    return render(request, 'login.html', {'form': form})
-
 def login_signin(request):
-    template = loader.get_template('login-signin.html')
-    return HttpResponse(template.render())
+    return render(request, 'login-signin.html')
 
 def parking(request):
-    template = loader.get_template('parking.html')
-    return HttpResponse(template.render())
+    return render(request, 'parking.html')
 
 def parking_add(request):
-    template = loader.get_template('parking-add.html')
-    return HttpResponse(template.render())
+    return render(request, 'parking-add.html')
 
 def parking_remove(request):
-    template = loader.get_template('parking-remove.html')
-    return HttpResponse(template.render())
+    return render(request, 'parking-remove.html')
 
 def schedule(request):
-    template = loader.get_template('schedule.html')
-    return HttpResponse(template.render())
+    return render(request, 'schedule.html')
 
 def schedule_show(request):
-    template = loader.get_template('schedule-show.html')
-    return HttpResponse(template.render())
-
-def signin(request):
-    template = loader.get_template('signin.html')
-    return HttpResponse(template.render())
+    return render(request, 'schedule-show.html')
 
 def ticket_buy(request):
-    template = loader.get_template('ticket-buy.html')
-    return HttpResponse(template.render())
+    return render(request, 'ticket-buy.html')
 
 def ticket_counter(request):
-    template = loader.get_template('ticket-counter.html')
-    return HttpResponse(template.render())
+    return render(request, 'ticket-counter.html')
 
 def card_recharge(request):
-    template = loader.get_template('card-recharge.html')
-    return HttpResponse(template.render())
+    if request.method == 'POST':
+        form = RechargeForm(request.POST)
+        if form.is_valid():
+            rechargeAmt = form.cleaned_data['amount']
+
+            cardDetes = fetch_card_details_by_user_id(request.user.username)
+            card_ID = cardDetes.Card_ID[0]
+
+            increment_card_balance(card_ID, rechargeAmt)
+
+            return redirect("/home_user")
+    else:
+        form = RechargeForm()
+
+    return render(request, 'card-recharge.html', {'form': form})
 
 def ticket_page(request):
-    template = loader.get_template('ticket.html')
-    return HttpResponse(template.render())
+    return render(request, 'ticket.html')
 
 def ticket_use(request):
-    template = loader.get_template('ticket-use.html')
-    return HttpResponse(template.render())
+    return render(request, 'ticket-use.html')
 
 def entrance_scan(request):
-    template = loader.get_template('entrance-scan.html')
-    return HttpResponse(template.render())
+    return render(request, 'entrance-scan.html')
 
 def exit_scan(request):
-    template = loader.get_template('exit-scan.html')
-    return HttpResponse(template.render())
+    return render(request, 'exit-scan.html')
 
 def line_info(request):
     if request.method == 'POST':
@@ -181,13 +167,9 @@ def show_routes(request):
         if form.is_valid():
             entry_option = form.cleaned_data['entry_choice']
             exit_option = form.cleaned_data['exit_choice']
-            
-            print(entry_option, exit_option)
 
             routeDetes = find_routes(entry_option, exit_option)
             routeDetes = routeDetes.to_dict(orient='records')
-
-            print(routeDetes)
 
             return render(request, 'route-show-details.html', {'routeDetes': routeDetes})
     else:

@@ -14,18 +14,22 @@
                 Nammuru Metro
             </div>
             <div class="home-button">
+                {% if user.is_authenticated %}
+                <a href="/home_user">Home</a>
+                {% else %}
                 <a href="/">Home</a>
+                {% endif %}
             </div>
         </nav>
     </header>
     <main>
         <div class="details-container">
             <div>
-                Card Number: xx
+                Card Number: {{ cardDetes.Card_ID.values.0 }}
             </div>
 
             <div>
-                Balance: xx
+                Balance: {{ cardDetes.Card_Balance.values.0 }}
             </div>
             
             <div class="nested-details">
@@ -34,34 +38,41 @@
                 </div>
                 <div>
                     <div>
-                        Date: xx
+                        Date: {{ cardDetes.Last_Recharge_Time.values.0 }}
                     </div>
                     <div>
-                        Amount: xx
+                        Amount: {{ cardDetes.Last_Recharge_Amount.values.0 }}
                     </div>
                 </div>
             </div>
 
+            
             <div class="nested-details">
                 <div>
                     Last Trip
                 </div>
                 <div>
-                    <div>
-                        Start: xx
-                    </div>
-                    <div>
-                        End: xx
-                    </div>
+
+                    {% if lastTrip.empty %}
+                            No Trips Yet
+                    {% else %}
+                        <div>
+                            Start: {{ cardDetes.Card_ID.values.0 }}
+                        </div>
+                        <div>
+                            End: {{ cardDetes.Card_ID.values.0 }}
+                        </div>
+                    {% endif %}
+                    
                 </div>
             </div>
 
             <div>
-                Total Savings: xx
+                Total Savings: {{ cardDetes.Total_Savings.values.0 }}
             </div>
 
             <div>
-                Number of Trips: xx
+                Number of Trips: {{ cardDetes.Number_Of_Trips.values.0 }}
             </div>
         </div>
     </main>

@@ -14,18 +14,19 @@
                 Nammuru Metro
             </div>
             <div class="home-button">
+                {% if user.is_authenticated %}
+                <a href="/home_user">Home</a>
+                {% else %}
                 <a href="/">Home</a>
+                {% endif %}
             </div>
         </nav>
     </header>
     <main>
         <div class="form-container">
-            <form>
-                <div>
-                    <label for="recharge-amount">Amount: </label>
-                    <input type="text" id="recharge-amount" name="recharge-amount" required>
-                </div>
-
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
                 <button type="submit">Recharge</button>
             </form>
         </div>

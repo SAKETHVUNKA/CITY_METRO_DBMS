@@ -14,17 +14,19 @@
                 Nammuru Metro
             </div>
             <div class="home-button">
+                {% if user.is_authenticated %}
+                <a href="/home_user">Home</a>
+                {% else %}
                 <a href="/">Home</a>
+                {% endif %}
             </div>
         </nav>
     </header>
     <main>
         <div class="form-container">
-            <form>
-                <button type="submit">Buy Ticket</button>
+                <a href="/ticket_buy"><button>Buy Ticket</button></a>
 
-                <button type="submit">Ticket History</button>
-            </form>
+                <a href="/ticket_buy"><button>Ticket History</button></a>
         </div>
     </main>
 </body>

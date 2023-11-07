@@ -14,6 +14,9 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=100)
     password = forms.CharField(widget=forms.PasswordInput)
 
+class RechargeForm(forms.Form):
+    amount = forms.CharField(max_length=10)
+
 class LineForm(forms.Form):
     from_choice = forms.ChoiceField(choices=[('purple', 'Purple'), ('green', 'Green')])
 
