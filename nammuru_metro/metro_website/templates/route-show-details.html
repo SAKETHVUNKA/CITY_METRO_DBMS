@@ -21,90 +21,35 @@
     <main>
         <div class="details-container">
             <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
+                Start Station: {{ routeDetes.0.start_station }}
             </div>
-
+        
             <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
+                End Station: {{ routeDetes.0.end_station }}
             </div>
-
+        
             <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
+                Stations Between: {{ routeDetes.0.stations_between }}
             </div>
-
+        
             <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
+                Price: {{ routeDetes.0.price }}
             </div>
-
+        
             <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
+                Duration: {{ routeDetes.0.duration }}
             </div>
-
-            <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
-            </div>
-
-            <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
-            </div>
-
-            <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
-            </div>
-
-            <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
-            </div>
-
-            <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
-            </div>
-
-            <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
-            </div>
-
-            <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
-            </div>
-
-            <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
-            </div>
-
-            <div>
-                <div>Number of Station: 7</div>
-                <div>Time: 6 minutes</div>
-                <div>Cost: 22</div>
-            </div>
-
         </div>
+        
+        <div class="path-container">
+            {% for path_item in routeDetes.0.path %}
+            <div>
+                <div>{{ forloop.counter }}</div>
+                <div>{{ path_item }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        
     </main>
 </body>
 </html>

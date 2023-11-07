@@ -13,7 +13,7 @@ def getLineInfo(line_colour):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -35,7 +35,7 @@ def getLineInfo(line_colour):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
     cursor = conn.cursor()
@@ -61,7 +61,7 @@ def getStationInfo(station_name):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -81,7 +81,7 @@ def getStationInfo(station_name):
     conn.close()
 
     # Convert the result into a DataFrame for better table-like representation
-    station_info = pd.DataFrame(result, columns=['station_id', 'station_name', 'start_date','number of platforms','visitors_yesterday'])
+    station_info = pd.DataFrame(result, columns=['station_id', 'station_name', 'start_date','number_of_platforms','visitors_yesterday'])
     
     return station_info
 
@@ -96,7 +96,7 @@ def insert_user_and_rider_card(user_id, user_password, mobile_number, parking_id
         db_config = {
             "host": "127.0.0.1",
             "user": "root",
-            "password": "Saketh$12485",
+            "password": "pass",
             "database": "metro1"
         }
 
@@ -139,7 +139,7 @@ def check_balance(p_Ticket_Price, p_card_id):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -182,7 +182,7 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -240,7 +240,7 @@ def insert_parking(station_id, user_id, vehicle_number, fee):
     db = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -275,7 +275,7 @@ def find_routes(start_station, end_station):
     db = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -330,7 +330,7 @@ def update_parking_status(parking_id):
     db = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -357,7 +357,7 @@ def update_exit_time(ticket_id):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -393,7 +393,7 @@ def update_entry_time(ticket_id):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -417,7 +417,7 @@ def increment_card_balance(card_id, amount_to_add):
         conn = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="Saketh$12485",
+            password="pass",
             database="metro1"
         )
 
@@ -443,7 +443,7 @@ def fetch_card_details_by_user_id(user_id):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="Saketh$12485",
+            password="pass",
             database="metro1"
         )
 
@@ -476,7 +476,7 @@ def call_fetch_parking_details(user_id):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="Saketh$12485",
+            password="pass",
             database="metro1"
         )
 
@@ -527,7 +527,7 @@ def check_credentials_and_send_otp(user_id, user_password):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="Saketh$12485",
+            password="pass",
             database="metro1"
         )
 
@@ -569,7 +569,7 @@ def get_most_recent_ticket(user_id):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="Saketh$12485",
+            password="pass",
             database="metro1"
         )
 

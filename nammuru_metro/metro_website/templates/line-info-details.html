@@ -21,40 +21,48 @@
     <main>
         <div class="details-container">
             <div>
-                Line ID: xx
+                Line ID: {{ lineDetes.LINE_ID.values.0 }}
             </div>
 
             <div>
-                Line Colour: xx
+                Line Colour: {{ lineDetes.LINE_COLOUR.values.0 }}
+            </div>
+
+            <!-- <div>
+                Line Name: {{ lineDetes.LINE_ID.values.0 }}
+            </div> -->
+
+            <div>
+                Total Distance: {{ lineDetes.TOTAL_DISTANCE.values.0 }} km
             </div>
 
             <div>
-                Line Name: xx
+                Number of stations: {{ lineDetes.NUMBER_OF_STATIONS.values.0 }}
             </div>
 
             <div>
-                Total Distance: xx
+                Starts At: {{ lineDetes.START_STATION.values.0 }}
             </div>
 
             <div>
-                Number of stations: xx
+                Ends At: {{ lineDetes.END_STATION.values.0 }}
             </div>
 
             <div>
-                Starts At: xx
+                Number of Visitors Yesterday: {{ lineDetes.RIDERS_YESTERDAY.values.0 }}
             </div>
 
             <div>
-                Ends At: xx
+                List of Stations:
+                <div class="scrollable-box">
+                <ul>
+                    {% for station in stationList %}
+                        <li>{{ station }}</li>
+                    {% endfor %}
+                </ul>
+                </div>
             </div>
-
-            <div>
-                Number of Visitors Yesterday: xx
-            </div>
-
-            <div>
-                List of stations: xxxxxxxxxxxxxxxxxxxxx
-            </div>
+            
         </div>
     </main>
 </body>

@@ -20,15 +20,9 @@
     </header>
     <main>
         <div class="form-container">
-            <form>
-                <div>
-                    <label for="lineID">Line: </label>
-                    <select name="from" id="from">
-                        <option value="purple">Purple</option>
-                        <option value="purple">Green</option>
-                    </select>
-                </div>
-
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
                 <button type="submit">Show</button>
             </form>
         </div>

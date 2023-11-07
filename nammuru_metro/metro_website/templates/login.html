@@ -2,7 +2,7 @@
 <html>
     <head>
         {% load static %}
-        <link rel="stylesheet" type="text/css" href="{% static 'Styles/signin.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'Styles/login.css' %}">
     </head>
 <body>
     <header>
@@ -18,14 +18,16 @@
             </div>
         </nav>
     </header>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-    <!-- <div>
-            <label for="otp">Phone Number:</label>
-            <input type="text" id="otp" name="otp" required>
-        </div> -->
-        <button type="submit">Login</button>
-    </form>
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <!-- <div>
+                <label for="otp">Phone Number:</label>
+                <input type="text" id="otp" name="otp" required>
+            </div> -->
+            <button type="submit">Login</button>
+        </form>
+    </div>
 </body>
 </html>

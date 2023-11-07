@@ -21,32 +21,32 @@
     <main>
         <div class="details-container">
             <div>
-                Station ID: xx
+                Station ID: {{ stationDetes.station_id.values.0 }}
             </div>
 
             <div>
-                Station Name: xx
+                Station Name: {{ stationDetes.station_name.values.0 }}
             </div>
 
             <div>
-                Number of platforms: xx
+                Number of platforms: {{ stationDetes.number_of_platforms.values.0 }}
             </div>
 
             <div>
-                Number of Visitors Yesterday: xx
+                Number of Visitors Yesterday: {{ stationDetes.visitors_yesterday.values.0 }}
             </div>
 
             <div>
-                Start Date: xx
+                Start Date: {{ stationDetes.start_date.values.0 }}
             </div>
 
-            <div>
-                Status: xx
-            </div>
+            <!-- <div>
+                Status: {{ stationDetes.station_id.values.0 }}
+            </div> -->
 
-            <div>
-                Line Name: xx
-            </div>
+            <!-- <div>
+                Line Name: {{ stationDetes.station_id.values.0 }}
+            </div> -->
         </div>
     </main>
 </body>

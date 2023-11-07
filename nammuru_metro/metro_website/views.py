@@ -4,7 +4,7 @@ from django.template import loader
 from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from .forms import RegistrationForm, LoginForm
+from .forms import *
 from .models import CustomUser
 from .utils import *
 
@@ -26,10 +26,6 @@ def home_admin(request):
 
 def home_user(request):
     template = loader.get_template('home-user.html')
-    return HttpResponse(template.render())
-
-def line_info_details(request):
-    template = loader.get_template('line-info-details.html')
     return HttpResponse(template.render())
 
 def login(request):
@@ -74,12 +70,12 @@ def user_login(request):
 
             try:
                 user = CustomUser.objects.get(username=username)
-                print(user)  # Debugging
+                # print(user)  # Debugging
             except CustomUser.DoesNotExist:
                 user = None
 
             if user and check_password(password, user.password):
-                print("Passwords match!")  # Debugging
+                # print("Passwords match!")  # Debugging
                 # Passwords match, so log in the user
                 request.session['user_id'] = user.id  # You can store the user's ID in the session
                 return redirect('home_user')  # Redirect to a dashboard page on successful login
@@ -121,10 +117,6 @@ def signin(request):
     template = loader.get_template('signin.html')
     return HttpResponse(template.render())
 
-def station_info_details(request):
-    template = loader.get_template('station-info-details.html')
-    return HttpResponse(template.render())
-
 def ticket_buy(request):
     template = loader.get_template('ticket-buy.html')
     return HttpResponse(template.render())
@@ -154,17 +146,51 @@ def exit_scan(request):
     return HttpResponse(template.render())
 
 def line_info(request):
-    template = loader.get_template('line-info.html')
-    return HttpResponse(template.render())
+    if request.method == 'POST':
+        form = LineForm(request.POST)
+        if form.is_valid():
+            selected_option = form.cleaned_data['from_choice']
+
+            lineDetes, stationList = getLineInfo(selected_option)
+            stationList = stationList['Station_Name'].tolist()
+
+            return render(request, 'line-info-details.html', {'lineDetes': lineDetes, 'stationList':stationList})
+    else:
+        form = LineForm()
+
+    return render(request, 'line-info.html', {'form': form})
 
 def station_info(request):
-    template = loader.get_template('station-info.html')
-    return HttpResponse(template.render())
+    if request.method == 'POST':
+        form = StationForm(request.POST)
+        if form.is_valid():
+            selected_option = form.cleaned_data['from_choice']
+            print(selected_option)
+
+            stationDetes = getStationInfo(selected_option)
+
+            return render(request, 'station-info-details.html', {'stationDetes': stationDetes})
+    else:
+        form = StationForm()
+
+    return render(request, 'station-info.html', {'form': form})
 
 def show_routes(request):
-    template = loader.get_template('route-show.html')
-    return HttpResponse(template.render())
+    if request.method == 'POST':
+        form = RouteForm(request.POST)
+        if form.is_valid():
+            entry_option = form.cleaned_data['entry_choice']
+            exit_option = form.cleaned_data['exit_choice']
+            
+            print(entry_option, exit_option)
 
-def show_routes_details(request):
-    template = loader.get_template('route-show-details.html')
-    return HttpResponse(template.render())
+            routeDetes = find_routes(entry_option, exit_option)
+            routeDetes = routeDetes.to_dict(orient='records')
+
+            print(routeDetes)
+
+            return render(request, 'route-show-details.html', {'routeDetes': routeDetes})
+    else:
+        form = RouteForm()
+
+    return render(request, 'route-show.html', {'form': form})

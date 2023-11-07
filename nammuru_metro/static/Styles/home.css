@@ -74,7 +74,7 @@ button {
     font-size: 20px;
     margin: 40px;
     height: 29vh;
-    width: 29vh;
+    width: 15vw;
     background-color: rgb(231, 231, 231);
     border-radius: 5px;
     transition: background-color 0.15s;

@@ -58,3 +58,9 @@ main {
     align-items: start;
     text-align: center;
 }
+
+.scrollable-box {
+  height: 150px;
+  overflow: auto;
+  border: 1px solid #ccc;
+}

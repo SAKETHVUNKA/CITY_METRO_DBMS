@@ -20,27 +20,9 @@
     </header>
     <main>
         <div class="form-container">
-            <form>
-                <div>
-                    <label for="entry-stationID">Entry Station: </label>
-                    <select name="from" id="from">
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="exit-stationID">Exit Station: </label>
-                    <select name="from" id="from">
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                </div>
-
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
                 <button type="submit">Show</button>
             </form>
         </div>

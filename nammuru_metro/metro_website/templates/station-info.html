@@ -20,78 +20,9 @@
     </header>
     <main>
         <div class="form-container">
-            <form>
-                <div>
-                    <label for="stationID">Station: </label>
-                    <select name="from" id="from">
-                        <option value="AGPP">Attiguppe</option>
-                        <option value="BYPL">Baiyappanahalli</option>
-                        <option value="BSNK">Banashankari</option>
-                        <option value="BENN">Benniganahalli</option>
-                        <option value="CHAL">Challaghatta</option>
-                        <option value="CKPE">Chickpete</option>
-                        <option value="CBPK">Cubbon Park</option>
-                        <option value="DSH">Dasarahalli</option>
-                        <option value="DJNR">Deepanjali Nagar</option>
-                        <option value="KLPK">Doddakallasandra</option>
-                        <option value="VDSA">Dr. B. R. Ambedkar Station, Vidhana Soudha</option>
-                        <option value="GDCP">Garudacharapalya</option>
-                        <option value="YPI">Goraguntepalya</option>
-                        <option value="HLRU">Halasuru</option>
-                        <option value="DKIA">Hoodi</option>
-                        <option value="UWVL">Hopefarm Channasandra</option>
-                        <option value="IDN">Indiranagar</option>
-                        <option value="JLHL">Jalahalli</option>
-                        <option value=" JYN">Jayanagar</option>
-                        <option value="JPN">Jayaprakash Nagar</option>
-                        <option value="BGUC">Jnanabharathi</option>
-                        <option value="KDGD">Kadugodi Tree Park</option>
-                        <option value="KGIT">Kengeri</option>
-                        <option value="MLSD">Kengeri Bus Terminal</option>
-                        <option value="APRC">Konanakunte Cross</option>
-                        <option value="SRCS">Krantivira Sangolli Rayanna Railway Station</option>
-                        <option value="KRMT">Krishna Rajendra Market</option>
-                        <option value="KRAM">Krishnarajapura (K.R.Pura)</option>
-                        <option value="KDNH">Kundalahalli</option>
-                        <option value="LBGH">Lalbagh</option>
-                        <option value="MIRD">Magadi Road</option>
-                        <option value="KVPR">Mahakavi Kuvempu Road</option>
-                        <option value="MHLI">Mahalakshmi</option>
-                        <option value="MAGR">Mahatma Gandhi Road</option>
-                        <option value="SPGD">Mantri Square Sampige Road</option>
-                        <option value="MYRD">Mysore Road</option>
-                        <option value="KGWA">Nadaprabhu Kempegowda Station, Majestic</option>
-                        <option value="NGSA">Nagasandra</option>
-                        <option value="VDHP">Nallurhalli</option>
-                        <option value="NLC">National College</option>
-                        <option value="NYHM">Pantharapalya - Nayandahalli</option>
-                        <option value="PATG">Pattanagere</option>
-                        <option value="ITPL">Pattandur Agrahara</option>
-                        <option value="PEYA">Peenya</option>
-                        <option value="PYID">Peenya Industry</option>
-                        <option value="RJNR">Rajajinagar</option>
-                        <option value="RRRN">Rajarajeshwari Nagar</option>
-                        <option value="RVR">Rashtreeya Vidyalaya Road</option>
-                        <option value="SSFY">Sandal Soap Factory</option>
-                        <option value="VWIA">Seetharampalya</option>
-                        <option value="APTS">Silk Institute</option>
-                        <option value="MDVP">Singayyanapalya</option>
-                        <option value="VSWA">Sir.M.Visvesvaraya Stn., Central College</option>
-                        <option value="SECE">South End Circle</option>
-                        <option value="HSLI">Sri Balagangadharanatha Swamiji Station, Hosahalli</option>
-                        <option value="SSHP">Sri Sathya Sai Hospital</option>
-                        <option value="SPRU">Srirampura</option>
-                        <option value="SVRD">Swami Vivekananda Road</option>
-                        <option value="TGTP">Thalaghattapura</option>
-                        <option value="TTY">Trinity</option>
-                        <option value="VJRH">Vajarahalli</option>
-                        <option value="VJN">Vijayanagar</option>
-                        <option value="WHTM">Whitefield (Kadugodi)</option>
-                        <option value="PUTH">Yelachenahalli</option>
-                        <option value="YPM">Yeshwanthpur</option>
-                    </select>
-                </div>
-
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
                 <button type="submit">Show</button>
             </form>
         </div>
