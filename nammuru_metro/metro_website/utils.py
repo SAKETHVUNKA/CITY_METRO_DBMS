@@ -569,7 +569,7 @@ def send_otp_via_sms(phone_number, otp):
     )
     
 # Function to check user credentials and send OTP
-def check_credentials_and_send_otp(user_id, user_password):
+def login(user_id, user_password):
     try:
         # Establish a connection to the local MySQL server
         connection = mysql.connector.connect(
@@ -596,12 +596,12 @@ def check_credentials_and_send_otp(user_id, user_password):
                     is_user = row[2]
                     phone_number = '+91' + str(phone_number)
                     # Generate an OTP
-                    otp = generate_otp()
+                    # otp = generate_otp()
 
                     # Send OTP via Gmail
-                    send_otp_via_sms(phone_number,otp)
+                    # send_otp_via_sms(phone_number,otp)
                     
-                    return otp, user_id, is_user
+                    return user_id, is_user
                 else:
                     return "Invalid Credentials", None, None
 
