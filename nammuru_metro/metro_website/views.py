@@ -11,6 +11,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 import math
 import base64
+from datetime import datetime
 
 # Create your views here.
 def home(request):
@@ -21,7 +22,15 @@ def card(request):
     user_id = request.user.username
     cardDetes = fetch_card_details_by_user_id(user_id)
     lastTrip = get_most_recent_ticket(user_id)
-    return render(request, 'card.html', {'cardDetes': cardDetes,'lastTrip':lastTrip})
+
+    lastRechargeTime = str(cardDetes.Last_Recharge_Time[0])
+    lastRechargeTime = datetime.fromisoformat(lastRechargeTime)
+    lastRechargeTime = lastRechargeTime.strftime("%B %d, %Y %I:%M %p")
+
+    if lastTrip.empty:
+        return render(request, 'card.html', {'cardDetes': cardDetes,'lastTrip':lastTrip, 'lastRechargeTime':lastRechargeTime, 'lastStart':None, 'lastEnd':None})
+    
+    return render(request, 'card.html', {'cardDetes': cardDetes,'lastTrip':lastTrip, 'lastRechargeTime':lastRechargeTime,'lastStart':stationReverseMappings[lastTrip.Start_Station[0]],'lastEnd':stationReverseMappings[lastTrip.End_Station[0]]})
 
 def home_admin(request):
     return render(request, 'home-admin.html')
@@ -84,15 +93,22 @@ def login_signin(request):
     return render(request, 'login-signin.html')
 
 def parking(request):
+    # insert_parking(' JYN', request.user.username, "KA 06", 99)
     parkingDf = fetch_parking_details(request.user.username)
 
-    if parkingDf.empty:
+    print(parkingDf)
+
+    if parkingDf.empty or parkingDf.Status[0] == 0:
         return render(request, 'parking.html', {'parkingDf': None})
+    
+    parkingTime = str(parkingDf.TimeStamp[0])
+    parkingTime = datetime.fromisoformat(parkingTime)
+    parkingTime = parkingTime.strftime("%B %d, %Y %I:%M %p")
 
     qr_code_bytes = parkingDf.QR_Code[0]
     qr_code_base64 = base64.b64encode(qr_code_bytes).decode('utf-8')
 
-    return render(request, 'parking.html', {'parkingDf':parkingDf, 'StationName':stationReverseMappings[parkingDf.Station_id[0]], 'qr_code_base64': qr_code_base64})
+    return render(request, 'parking.html', {'parkingDf':parkingDf, 'StationName':stationReverseMappings[parkingDf.Station_id[0]], 'qr_code_base64': qr_code_base64, 'parkingTime':parkingTime})
 
 def parking_add(request):
     return render(request, 'parking-add.html')

@@ -38,7 +38,7 @@
                 </div>
                 <div>
                     <div>
-                        Date: {{ cardDetes.Last_Recharge_Time.values.0 }}
+                        Date: {{ lastRechargeTime }}
                     </div>
                     <div>
                         Amount: {{ cardDetes.Last_Recharge_Amount.values.0 }}
@@ -57,10 +57,10 @@
                             No Trips Yet
                     {% else %}
                         <div>
-                            Start: {{ cardDetes.Card_ID.values.0 }}
+                            Start: {{ lastStart }}
                         </div>
                         <div>
-                            End: {{ cardDetes.Card_ID.values.0 }}
+                            End: {{ lastEnd }}
                         </div>
                     {% endif %}
                     
