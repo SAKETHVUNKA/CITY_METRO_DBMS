@@ -133,7 +133,120 @@ def insert_user_and_rider_card(user_id, user_password, mobile_number, parking_id
         cursor.close()
         connection.close()
         
+def find_routes(start_station, end_station):
+    # Connect to the MySQL database
+    db = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="pass",
+        database="metro1"
+    )
+
+    cursor = db.cursor()
+
+    # Fetch data from the MySQL table (replace 'your_table' with your table name)
+    query = "SELECT start_station, end_station, price, duration FROM route"
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    # Create a directed graph to represent the stations and connections
+    G = nx.DiGraph()
+
+    for row in rows:
+        G.add_edge(row[0], row[1], price=row[2], duration=row[3])
+
+    # Find all simple paths between the start and end station
+    all_paths = list(nx.all_simple_paths(G, source=start_station, target=end_station))
+
+    path_details = []
+
+    # Calculate details for each path
+    for path in all_paths:
+        total_price = 0
         
+        from datetime import datetime
+        current_time = datetime.now()
+        total_duration = current_time-current_time
+        num_stations = len(path) - 1
+
+        for i in range(len(path) - 1):
+            total_price += G[path[i]][path[i+1]]['price']
+            total_duration += G[path[i]][path[i+1]]['duration']
+
+        path_details.append({
+            "start_station": start_station,
+            "end_station": end_station,
+            "stations_between": num_stations,
+            "price": total_price,
+            "duration": total_duration,
+            "path": path
+        })
+
+    cursor.close()
+    db.close()
+
+    path_details=pd.DataFrame(path_details)
+    return path_details
+
+def fetch_card_details_by_user_id(user_id):
+    try:
+        # Establish a connection to the local MySQL server
+        connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="pass",
+            database="metro1"
+        )
+
+        cursor = connection.cursor()
+
+        # Call the stored procedure
+        cursor.callproc('FetchCardDetailsByUserID', [user_id])
+
+        # Fetch the results
+        for result in cursor.stored_results():
+            card_details = result.fetchall()
+
+        # Create a Pandas DataFrame from the fetched data
+        if card_details:
+            # columns = [desc[0] for desc in cursor.description]
+            df = pd.DataFrame(card_details, columns=["Card_ID","Card_Balance","Last_Recharge_Amount","Last_Recharge_Time","Total_Savings","Number_Of_Trips"])
+            return df
+        else:
+            return("Card doesn't exist .")
+
+    except mysql.connector.Error as err:
+        return(f"Error: {err}")
+    finally:
+        cursor.close()
+        connection.close()
+
+def increment_card_balance(card_id, amount_to_add):
+    try:
+        # Establish a MySQL database connection
+        conn = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="pass",
+            database="metro1"
+        )
+
+        # Create a cursor
+        cursor = conn.cursor()
+
+        # Call the stored procedure
+        cursor.callproc('IncrementCardBalance', (card_id, amount_to_add))
+
+        # Commit the changes
+        conn.commit()
+        return(f"Card balance updated successfully for Card_ID {card_id}. Added: ${amount_to_add}")
+
+    except mysql.connector.Error as err:
+        return("Error:", err)
+    finally:
+        cursor.close()
+        conn.close()
+
 def check_balance(p_Ticket_Price, p_card_id):
     # Establish a MySQL database connection
     conn = mysql.connector.connect(
@@ -202,7 +315,7 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
     # Generate the QR code as bytes
     img = qr.make_image(fill_color="black", back_color="white")
     qr_code_bytes = BytesIO()
-    img.save(qr_code_bytes, format="PNG")
+    img.save(qr_code_bytes)
     qr_code_bytes = qr_code_bytes.getvalue()
 
     # Call the stored procedure to insert the ticket (deduction of balance handled elsewhere)
@@ -216,9 +329,39 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
         cursor.close()
         conn.close()
         
-def generate_unique_parking_id():
-    # Generate a unique Parking_ID using UUID
-    return str(uuid.uuid4())
+def get_most_recent_ticket(user_id):
+    try:
+        # Establish a connection to the MySQL server on localhost
+        connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="pass",
+            database="metro1"
+        )
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+
+            # Call the MySQL procedure
+            cursor.callproc('GetMostRecentTicket', (user_id,))
+
+            # Retrieve the result
+            for result in cursor.stored_results():
+                data = result.fetchall()
+                if data:
+                    # Convert the result to a Pandas DataFrame
+                    df = pd.DataFrame(data, columns=['Ticket_ID', 'Ticket_Price', 'Entry_Time', 'Exit_Time', 'Date_of_Purchase', 'Start_Station', 'End_Station', 'Mode_of_Purchase', 'QR_Code'])
+                    return df
+
+        # Close the cursor and connection
+        cursor.close()
+        connection.close()
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+    # Return an empty DataFrame if no data is found
+    return pd.DataFrame()
 
 def generate_qr_code(data):
     # Generate a QR code from the provided data
@@ -232,8 +375,12 @@ def generate_qr_code(data):
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
     img_bytes = BytesIO()
-    img.save(img_bytes, format="PNG")
+    img.save(img_bytes)
     return img_bytes.getvalue()
+
+def generate_unique_parking_id():
+    # Generate a unique Parking_ID using UUID
+    return str(uuid.uuid4())
 
 def insert_parking(station_id, user_id, vehicle_number, fee):
     # Connect to the MySQL database
@@ -269,61 +416,55 @@ def insert_parking(station_id, user_id, vehicle_number, fee):
     finally:
         cursor.close()
         db.close()
-        
-def find_routes(start_station, end_station):
-    # Connect to the MySQL database
-    db = mysql.connector.connect(
-        host="127.0.0.1",
-        user="root",
-        password="pass",
-        database="metro1"
-    )
 
-    cursor = db.cursor()
+def fetch_parking_details(user_id):
+    try:
+        # Establish a connection to the local MySQL server
+        connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="pass",
+            database="metro1"
+        )
 
-    # Fetch data from the MySQL table (replace 'your_table' with your table name)
-    query = "SELECT start_station, end_station, price, duration FROM route"
-    cursor.execute(query)
-    rows = cursor.fetchall()
+        cursor = connection.cursor()
 
-    # Create a directed graph to represent the stations and connections
-    G = nx.DiGraph()
+        # Call the stored procedure and pass the user_id as a parameter
+        cursor.callproc('FetchParkingDetails', [user_id])
 
-    for row in rows:
-        G.add_edge(row[0], row[1], price=row[2], duration=row[3])
+        # Fetch the result from the procedure
+        results = cursor.stored_results()
+        for result in results:
+            rows = result.fetchall()
 
-    # Find all simple paths between the start and end station
-    all_paths = list(nx.all_simple_paths(G, source=start_station, target=end_station))
+        # Create a Pandas DataFrame from the fetched data
+        if rows:
+            # columns = [desc[0] for desc in cursor.description]
+            df = pd.DataFrame(rows,columns=["Parking_ID","Fee","TimeStamp","Status","QR_Code","Station_id","Vehicle_Number"])
+            return df
+        else:
+            return None # ("Parking doesn't exist.")
 
-    path_details = []
+    except mysql.connector.Error as err:
+        return("Error:", err)
+    finally:
+        cursor.close()
+        connection.close()
 
-    # Calculate details for each path
-    for path in all_paths:
-        total_price = 0
-        
-        from datetime import datetime
-        current_time = datetime.now()
-        total_duration = current_time-current_time
-        num_stations = len(path) - 1
 
-        for i in range(len(path) - 1):
-            total_price += G[path[i]][path[i+1]]['price']
-            total_duration += G[path[i]][path[i+1]]['duration']
 
-        path_details.append({
-            "start_station": start_station,
-            "end_station": end_station,
-            "stations_between": num_stations,
-            "price": total_price,
-            "duration": total_duration,
-            "path": path
-        })
 
-    cursor.close()
-    db.close()
 
-    path_details=pd.DataFrame(path_details)
-    return path_details
+
+
+
+
+
+
+
+
+
+
 
 def update_parking_status(parking_id):
     # Connect to the MySQL database
@@ -411,99 +552,6 @@ def update_entry_time(ticket_id):
         cursor.close()
         conn.close()
         
-def increment_card_balance(card_id, amount_to_add):
-    try:
-        # Establish a MySQL database connection
-        conn = mysql.connector.connect(
-            host="127.0.0.1",
-            user="root",
-            password="pass",
-            database="metro1"
-        )
-
-        # Create a cursor
-        cursor = conn.cursor()
-
-        # Call the stored procedure
-        cursor.callproc('IncrementCardBalance', (card_id, amount_to_add))
-
-        # Commit the changes
-        conn.commit()
-        return(f"Card balance updated successfully for Card_ID {card_id}. Added: ${amount_to_add}")
-
-    except mysql.connector.Error as err:
-        return("Error:", err)
-    finally:
-        cursor.close()
-        conn.close()
-        
-def fetch_card_details_by_user_id(user_id):
-    try:
-        # Establish a connection to the local MySQL server
-        connection = mysql.connector.connect(
-            host="127.0.0.1",
-            user="root",
-            password="pass",
-            database="metro1"
-        )
-
-        cursor = connection.cursor()
-
-        # Call the stored procedure
-        cursor.callproc('FetchCardDetailsByUserID', [user_id])
-
-        # Fetch the results
-        for result in cursor.stored_results():
-            card_details = result.fetchall()
-
-        # Create a Pandas DataFrame from the fetched data
-        if card_details:
-            # columns = [desc[0] for desc in cursor.description]
-            df = pd.DataFrame(card_details, columns=["Card_ID","Card_Balance","Last_Recharge_Amount","Last_Recharge_Time","Total_Savings","Number_Of_Trips"])
-            return df
-        else:
-            return("Card doesn't exist .")
-
-    except mysql.connector.Error as err:
-        return(f"Error: {err}")
-    finally:
-        cursor.close()
-        connection.close()
-        
-def call_fetch_parking_details(user_id):
-    try:
-        # Establish a connection to the local MySQL server
-        connection = mysql.connector.connect(
-            host="127.0.0.1",
-            user="root",
-            password="pass",
-            database="metro1"
-        )
-
-        cursor = connection.cursor()
-
-        # Call the stored procedure and pass the user_id as a parameter
-        cursor.callproc('FetchParkingDetails', [user_id])
-
-        # Fetch the result from the procedure
-        results = cursor.stored_results()
-        for result in results:
-            rows = result.fetchall()
-
-        # Create a Pandas DataFrame from the fetched data
-        if rows:
-            # columns = [desc[0] for desc in cursor.description]
-            df = pd.DataFrame(rows,columns=["Parking_ID","Fee","TimeStamp","Status","QR Code","Station_id","Vehicle Number"])
-            return df
-        else:
-            return("Parking doesn't exist .")
-
-    except mysql.connector.Error as err:
-        return("Error:", err)
-    finally:
-        cursor.close()
-        connection.close()
-        
 def generate_otp():
     digits = string.digits
     otp = ''.join(random.choice(digits) for _ in range(6))
@@ -563,36 +611,3 @@ def check_credentials_and_send_otp(user_id, user_password):
         cursor.close()
         connection.close()
 
-def get_most_recent_ticket(user_id):
-    try:
-        # Establish a connection to the MySQL server on localhost
-        connection = mysql.connector.connect(
-            host="127.0.0.1",
-            user="root",
-            password="pass",
-            database="metro1"
-        )
-
-        if connection.is_connected():
-            cursor = connection.cursor()
-
-            # Call the MySQL procedure
-            cursor.callproc('GetMostRecentTicket', (user_id,))
-
-            # Retrieve the result
-            for result in cursor.stored_results():
-                data = result.fetchall()
-                if data:
-                    # Convert the result to a Pandas DataFrame
-                    df = pd.DataFrame(data, columns=['Ticket_ID', 'Ticket_Price', 'Entry_Time', 'Exit_Time', 'Date_of_Purchase', 'Start_Station', 'End_Station', 'Mode_of_Purchase', 'QR_Code'])
-                    return df
-
-        # Close the cursor and connection
-        cursor.close()
-        connection.close()
-
-    except Exception as e:
-        print(f"Error: {e}")
-
-    # Return an empty DataFrame if no data is found
-    return pd.DataFrame()

@@ -23,36 +23,20 @@
         </nav>
     </header>
     <main>
-        <div class="details-container">
-            <div>
-                <div>From: </div>
-                
-            </div>
+        <div class="form-container">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Buy</button>
+            </form>
+        </div>
 
-            <div>
-                <div>To: </div>
-                
-            </div>
-            
             <!-- <div>
-                Route: generated auto
-            </div>
-            
-            <div>
-                <div>Card Number: </div>
-                <input type="text">
-            </div> -->
-
-            <div>
                 <div>OTP: </div>
                 <input type="text">
                 <button class="OTP-button">Generate</button>
-            </div>
-           
-            <div class="nested-button">
-                <button>Buy</button>
-            </div>
-        </div>
+            </div> -->
+
     </main>
 </body>
 </html>

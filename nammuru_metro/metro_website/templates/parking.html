@@ -14,7 +14,11 @@
                 Nammuru Metro
             </div>
             <div class="home-button">
+                {% if user.is_authenticated %}
+                <a href="/home_user">Home</a>
+                {% else %}
                 <a href="/">Home</a>
+                {% endif %}
             </div>
         </nav>
     </header>
@@ -22,32 +26,31 @@
         <div class="details-container">
             <div class="nested-details">
                 <div>
-                    Parking ID: xx
+                    Parking ID: {{ parkingDf.Parking_ID.values.0 }}
                 </div>
                 <div>
-                    Registration Number: xx
+                    Registration Number: {{ parkingDf.Vehicle_Number.values.0 }}
                 </div>
             </div>
 
             <div>
-                Timestamp: xx
+                Timestamp: {{ parkingDf.TimeStamp.values.0 }}
             </div>
 
             <div>
-                Fee: xx
+                Fee: {{ parkingDf.Fee.values.0 }}
             </div>
 
             <div class="qr-code">
-                {% comment %} <img src="QR.svg"/> {% endcomment %}
-                <img src="{% static 'styles/QR.svg' %}" alt="QR Code">
+                <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code"/>
             </div>
 
             <div class="nested-details">
                 <div>
-                    Station: xx
+                    Station: {{ StationName }}
                 </div>
                 <div>
-                    Status: xx
+                    Status: {{ parkingDf.Status.values.0 }}
                 </div>
             </div>
         </div>

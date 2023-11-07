@@ -69,17 +69,43 @@ main {
     justify-content: center;
 }
 
-.details-container div {
-    width: 100%;
+.form-container {
+    height: 90vh;
     display: flex;
-    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+form {
+    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(189, 189, 189);
+    box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
+    border-radius: 10px;
+    padding: 50px;
+}
+
+form p {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
-select, input {
-    margin-left: -400px;
+label {
+    display: inline-block;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+select {
+    display: inline-block;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
     height: 35px;
-    width: 50%;
+    width: 100%;
     border: 1px solid rgb(189, 189, 189);
     box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
     border-radius: 5px;
@@ -92,6 +118,7 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 40px;
     transition: background-color 0.15s;
 }
 

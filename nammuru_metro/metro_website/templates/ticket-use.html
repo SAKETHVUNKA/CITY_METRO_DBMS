@@ -14,30 +14,39 @@
                 Nammuru Metro
             </div>
             <div class="home-button">
+                {% if user.is_authenticated %}
+                <a href="/home_user">Home</a>
+                {% else %}
                 <a href="/">Home</a>
+                {% endif %}
             </div>
         </nav>
     </header>
     <main>
         <div class="details-container">
-
+            {% if not ticket %}
+                <div>
+                    <div>No recent tickets</div>
+                </div>
+            {% else %}
             <div>
                 <div class="qr-code">
-                    <img src="QR.svg"/>
+                    <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code"/>
                 </div>
-            </div>
-
-            <div>
-                <div>From: xx</div>
             </div>
             
             <div>
-                <div>To: xx</div>
+                <div>From: {{ startStation }}</div>
             </div>
-
+            
             <div>
-                <div>ID: xx</div>
+                <div>To: {{ endStation }}</div>
             </div>
+            
+            <div>
+                <div>ID: {{ ticket.Ticket_ID.values.0 }}</div>
+            </div>
+            {% endif %}
         </div>
     </main>
 </body>
