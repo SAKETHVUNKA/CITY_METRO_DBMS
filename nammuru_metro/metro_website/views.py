@@ -1,17 +1,15 @@
-# from django.shortcuts import render
-from django.http import HttpResponse
-from django.template import loader
 from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import *
 from .models import *
 from .utils import *
-from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 import math
 import base64
 from datetime import datetime
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 # Create your views here.
 def home(request):
@@ -48,9 +46,19 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
-                # User credentials are valid, log in the user
-                login(request, user)
-                return redirect('home_user')  # Redirect to a dashboard page on successful login
+                if True: # check is_user here
+
+                    user = User.objects.get(username=username)
+                    # Set is_staff to True
+                    user.is_staff = True
+                    user.save()
+
+                    login(request, user)
+                    return redirect('home_admin')
+                else:
+                    # User credentials are valid, log in the user
+                    login(request, user)
+                    return redirect('home_user')  # Redirect to a dashboard page on successful login
             else:
                 form.add_error(None, 'Invalid username or password')
     else:
@@ -79,7 +87,7 @@ def signup(request):
 
                     insert_user_and_rider_card(username, password1, phone)
 
-                    return redirect('home_user') 
+                    return redirect('login') 
                 else:
                     print(f"Authentication failed for username: {username}")
 
@@ -95,8 +103,6 @@ def login_signin(request):
 def parking(request):
     # insert_parking(' JYN', request.user.username, "KA 06", 99)
     parkingDf = fetch_parking_details(request.user.username)
-
-    print(parkingDf)
 
     if parkingDf.empty or parkingDf.Status[0] == 0:
         return render(request, 'parking.html', {'parkingDf': None})
