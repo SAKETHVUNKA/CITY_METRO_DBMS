@@ -24,6 +24,15 @@
     </header>
     <main>
         <div class="details-container">
+            {% if not parkingDf %}
+            <div>
+                <div class="nested-details">
+                    <div>
+                        No Recent Parking
+                    </div>
+                </div>
+            </div>
+            {% else %}
             <div class="nested-details">
                 <div>
                     Parking ID: {{ parkingDf.Parking_ID.values.0 }}
@@ -32,19 +41,19 @@
                     Registration Number: {{ parkingDf.Vehicle_Number.values.0 }}
                 </div>
             </div>
-
+            
             <div>
                 Timestamp: {{ parkingDf.TimeStamp.values.0 }}
             </div>
-
+            
             <div>
                 Fee: {{ parkingDf.Fee.values.0 }}
             </div>
-
+            
             <div class="qr-code">
                 <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code"/>
             </div>
-
+            
             <div class="nested-details">
                 <div>
                     Station: {{ StationName }}
@@ -53,6 +62,7 @@
                     Status: {{ parkingDf.Status.values.0 }}
                 </div>
             </div>
+            {% endif %}
         </div>
     </main>
 </body>

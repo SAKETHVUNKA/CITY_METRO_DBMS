@@ -443,7 +443,7 @@ def fetch_parking_details(user_id):
             df = pd.DataFrame(rows,columns=["Parking_ID","Fee","TimeStamp","Status","QR_Code","Station_id","Vehicle_Number"])
             return df
         else:
-            return None # ("Parking doesn't exist.")
+            return pd.DataFrame() # ("Parking doesn't exist.")
 
     except mysql.connector.Error as err:
         return("Error:", err)
