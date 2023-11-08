@@ -314,6 +314,7 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
 
     # Generate the QR code as bytes
     img = qr.make_image(fill_color="black", back_color="white")
+    qr_img=img
     qr_code_bytes = BytesIO()
     img.save(qr_code_bytes)
     qr_code_bytes = qr_code_bytes.getvalue()
@@ -322,7 +323,11 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
     try:
         cursor.callproc('InsertTicket', (p_Ticket_ID, p_Ticket_Price, p_Entry_Time, p_Exit_Time, p_Date_of_Purchase, p_Start_Station, p_End_Station, p_Mode_of_Purchase, p_card_id, qr_code_bytes))
         conn.commit()
-        return("Ticket inserted successfully with Ticket_ID:", p_Ticket_ID)
+        li=[]
+        li.append(p_Ticket_ID)
+        if p_Mode_of_Purchase=="money":
+            li.append(qr_img)
+        return li
     except mysql.connector.Error as err:
         return("Error: ", err)
     finally:
