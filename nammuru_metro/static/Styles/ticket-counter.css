@@ -44,37 +44,24 @@ main {
     margin: 25px;
 }
 
-.details-container {
+.details-container form {
     border: 1px solid rgb(189, 189, 189);
     box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
     border-radius: 10px;
     padding-top: 75px;
     padding-bottom: 50px;
-    padding-left: 150px;
-    padding-right: 150px;
+    padding-left: 100px;
+    padding-right: 100px;
     height: 70vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: start;
+    align-items: center;
     text-align: center;
 }
 
-.details-container div {
+.details-container form p {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.details-container div div {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-}
-
-.route-details {
-    font-size: 15px;
-    margin: 15px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -86,10 +73,10 @@ select {
     border: 1px solid rgb(189, 189, 189);
     box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
     border-radius: 5px;
+    margin-left: 10px;
 }
 
 .nested-button {
-    width: 100vw;
     display: flex;
     flex-direction: row;
     align-items: center;

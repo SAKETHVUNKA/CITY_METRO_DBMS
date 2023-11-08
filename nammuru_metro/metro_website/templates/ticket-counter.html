@@ -14,52 +14,23 @@
                 Nammuru Metro
             </div>
             <div class="home-button">
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="/home_admin">Home</a>
+                {% else %}
                 <a href="/">Home</a>
+                {% endif %}
             </div>
         </nav>
     </header>
     <main>
         <div class="details-container">
-            <div>
-                <div>
-                    <div>From: </div>
-                    <select name="from" id="from">
-                        <option value="AGPP">Attiguppe</option>
-                        <option value="BYPL">Baiyappanahalli</option>
-                    </select>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="nested-button">
+                    <button type="submit">Generate</button>
                 </div>
-            </div>
-
-            <div>
-                <div>
-                    <div>To: </div>
-                    <select name="to" id="to">
-                        <option value="AGPP">Attiguppe</option>
-                        <option value="BYPL">Baiyappanahalli</option>
-                    </select>
-                </div>
-            </div>
-
-            <div>
-                <div>
-                    <div>Route: </div>
-                    <select name="to" id="to">
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                </div>
-                <div class="route-details">
-                    <div>Cost: xx</div>
-                    <div>Time: xx</div>
-                    <div>Route ID: xx</div>
-                </div>
-            </div>
-           
-            <div class="nested-button">
-                <button>Generate</button>
-            </div>
+            </form>
         </div>
     </main>
 </body>

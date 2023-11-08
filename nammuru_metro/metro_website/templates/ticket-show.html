@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'Styles/ticket-show.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'styles/logo.jpeg' %}" alt="Metro Logo">
+            </div>
+            <div class="metro-name">
+                Nammuru Metro
+            </div>
+            <div class="home-button">
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="/home_admin">Home</a>
+                {% else %}
+                <a href="/">Home</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="details-container">
+            <div>
+                <div class="qr-code">
+                    <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code"/>
+                </div>
+            </div>
+            
+            <div>
+                <div>From: {{ startStation }}</div>
+            </div>
+            
+            <div>
+                <div>To: {{ endStation }}</div>
+            </div>
+            
+            <div>
+                <div>ID: {{ ticket_ID }}</div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -326,7 +326,7 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
         li=[]
         li.append(p_Ticket_ID)
         if p_Mode_of_Purchase=="money":
-            li.append(qr_img)
+            li.append(qr_code_bytes)
         return li
     except mysql.connector.Error as err:
         return("Error: ", err)

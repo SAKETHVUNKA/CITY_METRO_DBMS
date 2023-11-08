@@ -178,7 +178,9 @@ def ticket_buy(request):
 
             if check_balance(ticketPrice, card_ID):
                 insert_ticket(ticketPrice, stationMappings[fromStation], stationMappings[toStation], "card", card_ID)
-                return redirect("/home_user")
+
+                return redirect("/ticket_use")
+                # return redirect("/home_user")
             else:
                 form.add_error(None, 'Insufficient Balance')
 
@@ -187,7 +189,29 @@ def ticket_buy(request):
     return render(request, 'ticket-buy.html', {'form':form})
 
 def ticket_counter(request):
-    return render(request, 'ticket-counter.html')
+    if request.method == 'POST':
+        form = TicketCounterForm(request.POST)
+        if form.is_valid():
+            fromStation = form.cleaned_data['fromStation']
+            toStation = form.cleaned_data['toStation']
+
+            # print(fromStation, toStation)
+
+            routeDf = find_routes(fromStation, toStation)
+            ticketPrice = int(routeDf.price[0])
+
+            res = insert_ticket(ticketPrice, stationMappings[fromStation], stationMappings[toStation], "money")
+
+            ticketID = res[0]
+            qr_code_bytes = res[1]
+            qr_code_base64 = base64.b64encode(qr_code_bytes).decode('utf-8')
+
+            return render(request, 'ticket-show.html', {'startStation': fromStation, 'endStation':toStation, 'ticket_ID':ticketID, 'qr_code_base64':qr_code_base64})
+        
+    else:
+        form = TicketCounterForm()
+
+    return render(request, 'ticket-counter.html', {'form': form})
 
 def card_recharge(request):
     if request.method == 'POST':
