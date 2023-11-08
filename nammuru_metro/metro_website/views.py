@@ -46,19 +46,22 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
-                if True: # check is_user here
+                _, isUser = login_procedure(username, password)
+                print(type(isUser), isUser)
 
-                    user = User.objects.get(username=username)
-                    # Set is_staff to True
-                    user.is_staff = True
-                    user.save()
-
-                    login(request, user)
-                    return redirect('home_admin')
-                else:
+                if isUser: # check is_user here
                     # User credentials are valid, log in the user
                     login(request, user)
                     return redirect('home_user')  # Redirect to a dashboard page on successful login
+                else:
+                    userObj = User.objects.get(username=username)
+                    # Set is_staff to True
+                    userObj.is_staff = True
+                    userObj.save()
+
+                    login(request, user)    
+                    return redirect('home_admin')
+                    
             else:
                 form.add_error(None, 'Invalid username or password')
     else:
@@ -123,7 +126,24 @@ def parking_remove(request):
     return render(request, 'parking-remove.html')
 
 def schedule(request):
-    return render(request, 'schedule.html')
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            fromStation = form.cleaned_data['start_station']
+            toStation = form.cleaned_data['end_station']
+            fromTime = form.cleaned_data['time']
+
+            # print(fromStation, toStation, fromTime)
+
+            scheduleDf = main_function(fromStation, toStation, fromTime)
+
+            scheduleData = scheduleDf.to_dict(orient='records')
+
+            return render(request, "schedule-show.html", {'scheduleData':scheduleData})
+
+    else:
+        form = ScheduleForm()
+    return render(request, 'schedule.html', {'form':form})
 
 def schedule_show(request):
     return render(request, 'schedule-show.html')

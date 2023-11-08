@@ -15,6 +15,7 @@
             </div>
             <div class="home-button">
                 {% if user.is_authenticated and user.is_staff %}
+                <a href="/">Log Out</a>
                 <a href="/home_admin">Home</a>
                 {% else %}
                 <a href="/">Home</a>

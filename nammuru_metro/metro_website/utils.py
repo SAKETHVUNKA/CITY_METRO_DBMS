@@ -1,7 +1,7 @@
 import mysql.connector
 import pandas as pd
 import uuid
-from datetime import datetime,date
+from datetime import datetime,timedelta
 import qrcode
 from io import BytesIO
 import networkx as nx
@@ -451,7 +451,172 @@ def fetch_parking_details(user_id):
         cursor.close()
         connection.close()
 
+def check_train_line(start_station, end_station):
+    # Connect to the MySQL database
+    connection = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="pass",
+        database="metro1"
+    )
 
+    cursor = connection.cursor()
+
+    try:
+        # Get the Station_ID for the start_station and end_station
+        cursor.execute("SELECT Station_ID FROM station WHERE Station_Name = %s", (start_station,))
+        start_station_id = cursor.fetchone()
+
+        cursor.execute("SELECT Station_ID FROM station WHERE Station_Name = %s", (end_station,))
+        end_station_id = cursor.fetchone()
+
+        if start_station_id and end_station_id:
+            start_station_id = start_station_id[0]
+            end_station_id = end_station_id[0]
+
+            # Get the Line ID for the start station
+            cursor.execute("SELECT Line_ID FROM has_and_part_of WHERE Station_ID = %s", (start_station_id,))
+            start_line_id = cursor.fetchone()
+
+            if start_line_id:
+                # Check if both stations are part of the same Line_ID
+                cursor.execute("SELECT Line_ID FROM has_and_part_of WHERE Station_ID = %s", (end_station_id,))
+                end_line_id = cursor.fetchone()
+
+                if end_line_id and start_line_id[0] == end_line_id[0]:
+                    # Stations are on the same train line
+                    # Get the line name for the start station
+                    cursor.execute("SELECT Line_Colour FROM line WHERE Line_ID = %s", (start_line_id[0],))
+                    start_line_name = cursor.fetchone()
+                    return start_station, start_line_name[0], end_station
+                else:
+                    # If stations are on different lines, set the end_station to "Nadaprabhu Kempegowda Station, Majestic"
+                    cursor.execute("SELECT Line_Colour FROM line WHERE Line_ID = %s", (start_line_id[0],))
+                    start_line_name = cursor.fetchone()
+                    end_station = "Nadaprabhu Kempegowda Station, Majestic"
+                    return start_station, start_line_name[0], end_station
+
+        # Handle cases where station names are not found
+        return None, None, None
+
+    finally:
+        cursor.close()
+        connection.close()
+
+def find_nearest_station(start_station, start_line):
+    # Connect to the MySQL database
+    connection = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="pass",
+        database="metro1"
+    )
+
+    cursor = connection.cursor()
+
+    try:
+        # Get the Line_ID corresponding to the provided start_line
+        cursor.execute("SELECT Line_ID FROM line WHERE Line_Colour = %s", (start_line,))
+        start_line_id = cursor.fetchone()
+
+        if start_line_id:
+            start_line_id = start_line_id[0]
+
+            # Create a directed graph
+            G = nx.DiGraph()
+
+            # Get all routes from the route table and add them to the graph
+            cursor.execute("SELECT START_STATION, END_STATION, DURATION FROM route")
+            for row in cursor.fetchall():
+                start, end, duration = row
+                G.add_edge(start, end, duration=duration.total_seconds())  # Convert duration to seconds
+
+            # Get all stations under the same line from the "has_and_part_of" table
+            cursor.execute("SELECT distinct start_station,platform_number FROM schedule WHERE Line_colour = %s", (start_line,))
+            same_line_stations_in_schedule = [row for row in cursor.fetchall()]
+
+            # Calculate the shortest duration to reach each station under the same line
+            shortest_durations = []
+            for station1 in same_line_stations_in_schedule:
+                try:
+                    station = station1[0]
+                    # if start_station=="Nagasandra ":
+                    #     start_station="Nagasandra"
+                    
+                    duration = nx.shortest_path_length(G, source=start_station, target=station, weight='duration')
+                    majestic_duration = nx.shortest_path_length(G, source=start_station, target="Nadaprabhu Kempegowda Station, Majestic", weight='duration')
+                    majestic_duration_station = nx.shortest_path_length(G, source=station, target="Nadaprabhu Kempegowda Station, Majestic", weight='duration')
+                    if duration + majestic_duration == majestic_duration_station:
+                        shortest_durations.append([station1, duration])
+                except nx.NetworkXNoPath:
+                    # If there is no path, it's not reachable
+                    pass
+
+            return shortest_durations
+
+    finally:
+        cursor.close()
+        connection.close()
+
+def display_updated_durations(schedule_updates, min_time):
+    # Connect to the MySQL database
+    connection = mysql.connector.connect(
+        host="127.0.1.1",
+        user="root",
+        password="pass",
+        database="metro1"
+    )
+
+    try:
+        data = []
+
+        for update in schedule_updates:
+            station , duration_seconds = update
+            station_name = station[0]
+            platform_number = station[1]
+            cursor = connection.cursor()
+            # Fetch rows from the schedule table where the start station matches the station name in the list and time is greater than min_time
+            cursor.execute("SELECT * FROM schedule WHERE START_STATION = %s AND time_of_arrival > %s", (station_name, min_time))
+            schedule_rows = cursor.fetchall()
+            cursor.close()
+
+            if schedule_rows:
+                for row in schedule_rows:
+                    # Calculate the updated duration
+                    current_duration = row[2]  # Assuming that the current duration is stored in the third column
+                    updated_duration = current_duration + timedelta(seconds=duration_seconds)
+
+                    # Convert the updated duration to hh:mm:ss format
+                    hours, remainder = divmod(updated_duration.seconds, 3600)
+                    minutes, seconds = divmod(remainder, 60)
+                    duration_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+                    data.append((platform_number, duration_str))
+
+        if data:
+            # Create a DataFrame and rename the duration column to "time"
+            df = pd.DataFrame(data, columns=["Platform", "time"])
+            df.sort_values(by="time", inplace=True)
+
+            return df
+
+        return None
+
+    finally:
+        connection.close()
+
+def main_function(start_station, end_station, min_time):
+    # Step 1: Check the train line
+    start_station, start_line, end_station = check_train_line(start_station, end_station)
+
+    # Step 2: Find the nearest station
+    shortest_durations = find_nearest_station(start_station, start_line)
+
+    # Step 3: Display updated durations
+    updated_durations = display_updated_durations(shortest_durations, min_time)
+
+    # return start_station, start_line, end_station, updated_durations
+    return updated_durations
 
 
 
@@ -569,7 +734,7 @@ def send_otp_via_sms(phone_number, otp):
     )
     
 # Function to check user credentials and send OTP
-def login(user_id, user_password):
+def login_procedure(user_id, user_password):
     try:
         # Establish a connection to the local MySQL server
         connection = mysql.connector.connect(
@@ -610,4 +775,3 @@ def login(user_id, user_password):
     finally:
         cursor.close()
         connection.close()
-
