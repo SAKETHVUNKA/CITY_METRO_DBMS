@@ -14,49 +14,23 @@
                 Nammuru Metro
             </div>
             <div class="home-button">
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="/home_admin">Home</a>
+                {% else %}
                 <a href="/">Home</a>
+                {% endif %}
             </div>
         </nav>
     </header>
     <main>
         <div class="details-container">
-            <div>
-                <div>Registration Number: </div>
-                <input type="text">
-            </div>
-
-            <div>
-                Timestamp: xx
-            </div>
-
-            <div>
-                <div>Station: </div>
-                <select name="from" id="from">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                </select>
-            </div>
-
-            <div>
-                Fee: xx
-            </div>
-
-            <div>
-                <div>User-ID: </div>
-                <input type="text">
-            </div>
-
-            <div>
-                <div>OTP: </div>
-                <input type="text">
-                <button class="OTP-button">Generate</button>
-            </div>
-           
-            <div class="nested-button">
-                <button>Add</button>
-            </div>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="nested-button">
+                    <button type="submit">Add</button>
+                </div>
+            </form>
         </div>
     </main>
 </body>

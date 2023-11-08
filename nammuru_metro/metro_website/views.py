@@ -120,7 +120,21 @@ def parking(request):
     return render(request, 'parking.html', {'parkingDf':parkingDf, 'StationName':stationReverseMappings[parkingDf.Station_id[0]], 'qr_code_base64': qr_code_base64, 'parkingTime':parkingTime})
 
 def parking_add(request):
-    return render(request, 'parking-add.html')
+    if request.method == 'POST':
+        form = ParkingAddForm(request.POST)
+        if form.is_valid():
+            reg_no = form.cleaned_data['Registration_Number']
+            atStation = form.cleaned_data['station']
+            fee = form.cleaned_data['fee']
+            user_id  = form.cleaned_data['User_ID']
+
+            insert_parking(stationMappings[atStation], user_id, reg_no, fee)
+
+            return redirect("/home_admin")
+
+    else:
+        form = ParkingAddForm()
+    return render(request, 'parking-add.html', {'form':form})
 
 def parking_remove(request):
     return render(request, 'parking-remove.html')
@@ -167,7 +181,6 @@ def ticket_buy(request):
                 return redirect("/home_user")
             else:
                 form.add_error(None, 'Insufficient Balance')
-
 
     else:
         form = TicketBuyForm()

@@ -618,7 +618,47 @@ def main_function(start_station, end_station, min_time):
     # return start_station, start_line, end_station, updated_durations
     return updated_durations
 
+def login_procedure(user_id, user_password):
+    try:
+        # Establish a connection to the local MySQL server
+        connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="pass",
+            database="metro1"
+        )
 
+        cursor = connection.cursor(buffered=True)
+
+        # Call the stored procedure to check user credentials and retrieve information
+        cursor.callproc('CheckUserCredentials', [user_id, user_password])
+        connection.commit()
+
+        # Fetch the result
+        for result in cursor.stored_results():
+            result_set = result.fetchall()
+            if result_set:
+                row = result_set[0]
+                if 'Invalid Credentials' not in row:
+                    user_id = row[0]  # Assuming the email address is the same as the username.
+                    phone_number = row[1]
+                    is_user = row[2]
+                    phone_number = '+91' + str(phone_number)
+                    # Generate an OTP
+                    # otp = generate_otp()
+
+                    # Send OTP via Gmail
+                    # send_otp_via_sms(phone_number,otp)
+                    
+                    return user_id, is_user
+                else:
+                    return "Invalid Credentials", None, None
+
+    except mysql.connector.Error as err:
+        return str(err), None, None
+    finally:
+        cursor.close()
+        connection.close()
 
 
 
@@ -734,44 +774,3 @@ def send_otp_via_sms(phone_number, otp):
     )
     
 # Function to check user credentials and send OTP
-def login_procedure(user_id, user_password):
-    try:
-        # Establish a connection to the local MySQL server
-        connection = mysql.connector.connect(
-            host="127.0.0.1",
-            user="root",
-            password="pass",
-            database="metro1"
-        )
-
-        cursor = connection.cursor(buffered=True)
-
-        # Call the stored procedure to check user credentials and retrieve information
-        cursor.callproc('CheckUserCredentials', [user_id, user_password])
-        connection.commit()
-
-        # Fetch the result
-        for result in cursor.stored_results():
-            result_set = result.fetchall()
-            if result_set:
-                row = result_set[0]
-                if 'Invalid Credentials' not in row:
-                    user_id = row[0]  # Assuming the email address is the same as the username.
-                    phone_number = row[1]
-                    is_user = row[2]
-                    phone_number = '+91' + str(phone_number)
-                    # Generate an OTP
-                    # otp = generate_otp()
-
-                    # Send OTP via Gmail
-                    # send_otp_via_sms(phone_number,otp)
-                    
-                    return user_id, is_user
-                else:
-                    return "Invalid Credentials", None, None
-
-    except mysql.connector.Error as err:
-        return str(err), None, None
-    finally:
-        cursor.close()
-        connection.close()
