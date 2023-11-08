@@ -177,8 +177,7 @@ def ticket_buy(request):
             card_ID = cardDetes.Card_ID[0]
 
             if check_balance(ticketPrice, card_ID):
-                res = insert_ticket(ticketPrice, stationMappings[fromStation], stationMappings[toStation], "card", card_ID)
-                print(res)
+                insert_ticket(ticketPrice, stationMappings[fromStation], stationMappings[toStation], "card", card_ID)
                 return redirect("/home_user")
             else:
                 form.add_error(None, 'Insufficient Balance')
