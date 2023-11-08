@@ -47,7 +47,7 @@ def login_view(request):
 
             if user is not None:
                 _, isUser = login_procedure(username, password)
-                print(type(isUser), isUser)
+                # print(type(isUser), isUser)
 
                 if isUser: # check is_user here
                     # User credentials are valid, log in the user
@@ -236,7 +236,7 @@ def ticket_page(request):
 def ticket_use(request):
     ticket = get_most_recent_ticket(request.user.username)
 
-    print(ticket.Exit_Time[0])
+    # print(ticket.Exit_Time[0])
 
     if ticket.empty or ticket.Exit_Time[0]:
         return render(request, 'ticket-use.html', {'ticket':None})
@@ -247,7 +247,7 @@ def ticket_use(request):
     qr_code_bytes = ticket.QR_Code[0]
     qr_code_base64 = base64.b64encode(qr_code_bytes).decode('utf-8')
 
-    print(qr_code_bytes)
+    # print(qr_code_bytes)
     return render(request, 'ticket-use.html', {'ticket':ticket, 'startStation':startStation, 'endStation':endStation, 'qr_code_base64': qr_code_base64})
 
 def entrance_scan(request):
@@ -276,7 +276,7 @@ def station_info(request):
         form = StationForm(request.POST)
         if form.is_valid():
             selected_option = form.cleaned_data['from_choice']
-            print(selected_option)
+            # print(selected_option)
 
             stationDetes = getStationInfo(selected_option)
 
