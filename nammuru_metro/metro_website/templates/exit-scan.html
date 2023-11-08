@@ -3,6 +3,7 @@
 <head>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'Styles/exit-scan.css' %}">
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 </head>
 <body>
     <header>
@@ -25,20 +26,42 @@
     <main>
         <div class="details-container">
             <div>
-                QR scan: camera here
-                <div class="qr-code">
-                    <img src="QR.svg"/>
-                </div>
+                <video id="qr-code">
+                    <!-- <img src="QR.svg"/> -->
+                    <script>
+                        const scanner = new Instascan.Scanner({ video: document.getElementById('qr-code') });
+                
+                        scanner.addListener('scan', function (content) {
+                            // Handle the scanned QR code data
+                            console.log('QR Code Scanned: ' + content);
+                
+                            // You can send the data to the server using AJAX
+                            fetch('/submit_qr_code/', {
+                                method: 'POST',
+                                body: JSON.stringify({ qrcode: content }),
+                                headers: { 'Content-Type': 'application/json' },
+                            })
+                        });
+                
+                        Instascan.Camera.getCameras().then(function (cameras) {
+                            if (cameras.length > 0) {
+                                scanner.start(cameras[0]);
+                            } else {
+                                console.error('No cameras found.');
+                            }
+                        });
+                    </script>
+                    
+                </video>
             </div>
 
-            <div>
-                <div>ID: </div>
-                <input type="text">
-            </div>
-           
-            <div class="nested-button">
-                <button>Check Out</button>
-            </div>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="nested-button">
+                    <button type="submit">Check Out</button>
+                </div>
+            </form>
         </div>
     </main>
 </body>

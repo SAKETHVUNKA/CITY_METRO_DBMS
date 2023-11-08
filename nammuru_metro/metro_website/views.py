@@ -7,7 +7,9 @@ from .utils import *
 from django.contrib.auth.models import User
 import math
 import base64
+import json
 from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -250,11 +252,63 @@ def ticket_use(request):
     # print(qr_code_bytes)
     return render(request, 'ticket-use.html', {'ticket':ticket, 'startStation':startStation, 'endStation':endStation, 'qr_code_base64': qr_code_base64})
 
+@csrf_exempt
 def entrance_scan(request):
-    return render(request, 'entrance-scan.html')
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            qrcodeDecoded = data.get('qrcode')
+        except:
+            qrcodeDecoded = None
 
+        if qrcodeDecoded:
+            print(qrcodeDecoded)
+            print("Here")
+            return redirect("/home_admin")
+            # return render(request, 'home-admin.html')
+
+        else:
+            form = EntranceForm(request.POST)
+            if form.is_valid():
+                ticketId = form.cleaned_data['ticketID']
+
+                # print(ticketId)
+                update_entry_time(ticketId)
+
+                return redirect("/home_admin")
+    else:
+        form = EntranceForm()
+
+    return render(request, 'entrance-scan.html', {'form': form})
+
+@csrf_exempt
 def exit_scan(request):
-    return render(request, 'exit-scan.html')
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            qrcodeDecoded = data.get('qrcode')
+        except:
+            qrcodeDecoded = None
+
+        if qrcodeDecoded:
+            print(qrcodeDecoded)
+            print("Here")
+            # return redirect("/home_admin")
+            return render(request, 'home-admin.html')
+
+        else:
+            form = ExitForm(request.POST)
+            if form.is_valid():
+                ticketId = form.cleaned_data['ticketID']
+
+                # print(ticketId)
+                update_exit_time(ticketId)
+
+                return redirect("/home_admin")
+    else:
+        form = ExitForm()
+
+    return render(request, 'exit-scan.html', {'form': form})
 
 def line_info(request):
     if request.method == 'POST':
@@ -301,3 +355,4 @@ def show_routes(request):
         form = RouteForm()
 
     return render(request, 'route-show.html', {'form': form})
+

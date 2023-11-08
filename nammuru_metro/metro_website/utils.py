@@ -758,7 +758,8 @@ def update_entry_time(ticket_id):
         conn.commit()
         return("Entry time updated successfully for Ticket_ID:", ticket_id)
     except mysql.connector.Error as err:
-        return("Error: ", err)
+        # return("Error: ", err)
+        return -1
     finally:
         cursor.close()
         conn.close()

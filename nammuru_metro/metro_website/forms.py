@@ -1,6 +1,11 @@
 from django import forms
 from .models import CustomUser
 
+class EntranceForm(forms.Form):
+    ticketID = forms.CharField(label="ID", max_length=100)
+
+class ExitForm(forms.Form):
+    ticketID = forms.CharField(label="ID", max_length=100)
 
 class RegistrationForm(forms.ModelForm):
     password1 = forms.CharField(widget=forms.PasswordInput)
