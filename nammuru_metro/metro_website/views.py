@@ -128,9 +128,10 @@ def parking_add(request):
             fee = form.cleaned_data['fee']
             user_id  = form.cleaned_data['User_ID']
 
-            insert_parking(stationMappings[atStation], user_id, reg_no, fee)
-
-            return redirect("/home_admin")
+            if insert_parking(stationMappings[atStation], user_id, reg_no, fee) == -1:
+                form.add_error(None, "User not found")
+            else:
+                return redirect("/home_admin")
 
     else:
         form = ParkingAddForm()

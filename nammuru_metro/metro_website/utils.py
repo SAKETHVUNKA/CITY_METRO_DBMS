@@ -412,7 +412,8 @@ def insert_parking(station_id, user_id, vehicle_number, fee):
         return "Parking record inserted successfully."
     except Exception as e:
         db.rollback()
-        return f"Error: {e}"
+        # return f"Error: {e}"
+        return -1
     finally:
         cursor.close()
         db.close()
