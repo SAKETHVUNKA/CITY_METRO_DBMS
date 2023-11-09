@@ -36,16 +36,9 @@
                         scanner.addListener('scan', function (content) {
                             if (!qrCodeScanned) {
                                 qrCodeScanned = true; // Set the flag to true to indicate a successful scan
-                                console.log('QR Code Scanned: ' + content);
+                                // console.log('QR Code Scanned: ' + content);
 
-                                // You can send the data to the server using AJAX
-                                fetch('/entrance_scan/', {
-                                    method: 'POST',
-                                    body: JSON.stringify({ qrcode: content }),
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    }
-                                })
+                                document.getElementById("id_ticketID").value = content
                             }
                         });
                 

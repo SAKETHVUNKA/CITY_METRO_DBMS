@@ -140,7 +140,19 @@ def parking_add(request):
     return render(request, 'parking-add.html', {'form':form})
 
 def parking_remove(request):
-    return render(request, 'parking-remove.html')
+    if request.method == 'POST':
+        form = ParkingForm(request.POST)
+        if form.is_valid():
+            parkingID = form.cleaned_data['parkingID']
+
+            # print(parkingID)
+            update_parking_status(parkingID)
+
+            return redirect("/home_admin")
+    else:
+        form = ParkingForm()
+
+    return render(request, 'parking-remove.html', {'form': form})
 
 def schedule(request):
     if request.method == 'POST':
@@ -149,8 +161,6 @@ def schedule(request):
             fromStation = form.cleaned_data['start_station']
             toStation = form.cleaned_data['end_station']
             fromTime = form.cleaned_data['time']
-
-            # print(fromStation, toStation, fromTime)
 
             scheduleDf = main_function(fromStation, toStation, fromTime)
 
@@ -255,27 +265,14 @@ def ticket_use(request):
 @csrf_exempt
 def entrance_scan(request):
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body.decode('utf-8'))
-            qrcodeDecoded = data.get('qrcode')
-        except:
-            qrcodeDecoded = None
+        form = EntranceForm(request.POST)
+        if form.is_valid():
+            ticketId = form.cleaned_data['ticketID']
 
-        if qrcodeDecoded:
-            print(qrcodeDecoded)
-            print("Here")
+            print(ticketId)
+            update_entry_time(ticketId)
+
             return redirect("/home_admin")
-            # return render(request, 'home-admin.html')
-
-        else:
-            form = EntranceForm(request.POST)
-            if form.is_valid():
-                ticketId = form.cleaned_data['ticketID']
-
-                # print(ticketId)
-                update_entry_time(ticketId)
-
-                return redirect("/home_admin")
     else:
         form = EntranceForm()
 
@@ -284,27 +281,14 @@ def entrance_scan(request):
 @csrf_exempt
 def exit_scan(request):
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body.decode('utf-8'))
-            qrcodeDecoded = data.get('qrcode')
-        except:
-            qrcodeDecoded = None
+        form = ExitForm(request.POST)
+        if form.is_valid():
+            ticketId = form.cleaned_data['ticketID']
 
-        if qrcodeDecoded:
-            print(qrcodeDecoded)
-            print("Here")
-            # return redirect("/home_admin")
-            return render(request, 'home-admin.html')
+            print(ticketId)
+            update_exit_time(ticketId)
 
-        else:
-            form = ExitForm(request.POST)
-            if form.is_valid():
-                ticketId = form.cleaned_data['ticketID']
-
-                # print(ticketId)
-                update_exit_time(ticketId)
-
-                return redirect("/home_admin")
+            return redirect("/home_admin")
     else:
         form = ExitForm()
 

@@ -29,18 +29,16 @@
                 <video id="qr-code">
                     <!-- <img src="QR.svg"/> -->
                     <script>
+                        let qrCodeScanned = false
                         const scanner = new Instascan.Scanner({ video: document.getElementById('qr-code') });
                 
                         scanner.addListener('scan', function (content) {
-                            // Handle the scanned QR code data
-                            console.log('QR Code Scanned: ' + content);
-                
-                            // You can send the data to the server using AJAX
-                            fetch('/submit_qr_code/', {
-                                method: 'POST',
-                                body: JSON.stringify({ qrcode: content }),
-                                headers: { 'Content-Type': 'application/json' },
-                            })
+                            if (!qrCodeScanned) {
+                                qrCodeScanned = true; // Set the flag to true to indicate a successful scan
+                                // console.log('QR Code Scanned: ' + content);
+
+                                document.getElementById("id_ticketID").value = content
+                            }
                         });
                 
                         Instascan.Camera.getCameras().then(function (cameras) {

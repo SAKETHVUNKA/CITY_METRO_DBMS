@@ -3,6 +3,7 @@
 <head>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'Styles/parking-remove.css' %}">
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 </head>
 <body>
     <header>
@@ -25,30 +26,40 @@
     <main>
         <div class="details-container">
             <div>
-                <div>Payment Status: </div>
-                <select name="to" id="to">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                </select>
+                <video id="qr-code">
+                    <!-- <img src="QR.svg"/> -->
+                    <script>
+                        let qrCodeScanned = false
+                        const scanner = new Instascan.Scanner({ video: document.getElementById('qr-code') });
+                
+                        scanner.addListener('scan', function (content) {
+                            if (!qrCodeScanned) {
+                                qrCodeScanned = true; // Set the flag to true to indicate a successful scan
+                                // console.log('QR Code Scanned: ' + content);
+
+                                document.getElementById("id_parkingID").value = content
+                            }
+                        });
+                
+                        Instascan.Camera.getCameras().then(function (cameras) {
+                            if (cameras.length > 0) {
+                                scanner.start(cameras[0]);
+                            } else {
+                                console.error('No cameras found.');
+                            }
+                        });
+                    </script>
+                    
+                </video>
             </div>
 
-            <div>
-                Parking ID: cam here
-                <div class="qr-code">
-                    <img src="QR.svg"/>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="nested-button">
+                    <button type="submit">Remove</button>
                 </div>
-            </div>
-
-            <div>
-                <div>Parking ID: </div>
-                <input type="text">
-            </div>
-           
-            <div class="nested-button">
-                <button>Remove</button>
-            </div>
+            </form>
         </div>
     </main>
 </body>

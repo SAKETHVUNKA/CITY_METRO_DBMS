@@ -666,44 +666,6 @@ def login_procedure(user_id, user_password):
         cursor.close()
         connection.close()
 
-
-
-
-
-
-
-
-
-
-
-
-def update_parking_status(parking_id):
-    # Connect to the MySQL database
-    db = mysql.connector.connect(
-        host="127.0.0.1",
-        user="root",
-        password="pass",
-        database="metro1"
-    )
-
-    cursor = db.cursor()
-
-    # Set the new status to "completed"
-    new_status = 0
-
-    # Prepare and execute the SQL update query
-    try:
-        update_query = "UPDATE parking SET Status = %s WHERE Parking_ID = %s"
-        cursor.execute(update_query, (new_status, parking_id))
-        db.commit()
-        return "Parking record status updated to 'completed' successfully."
-    except Exception as e:
-        db.rollback()
-        return f"Error: {e}"
-    finally:
-        cursor.close()
-        db.close()
-        
 def update_exit_time(ticket_id):
     # Establish a MySQL database connection
     conn = mysql.connector.connect(
@@ -763,6 +725,45 @@ def update_entry_time(ticket_id):
     finally:
         cursor.close()
         conn.close()
+
+def update_parking_status(parking_id):
+    # Connect to the MySQL database
+    db = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="pass",
+        database="metro1"
+    )
+
+    cursor = db.cursor()
+
+    # Set the new status to "completed"
+    new_status = 0
+
+    # Prepare and execute the SQL update query
+    try:
+        update_query = "UPDATE parking SET Status = %s WHERE Parking_ID = %s"
+        cursor.execute(update_query, (new_status, parking_id))
+        db.commit()
+        return "Parking record status updated to 'completed' successfully."
+    except Exception as e:
+        db.rollback()
+        return f"Error: {e}"
+    finally:
+        cursor.close()
+        db.close()
+
+
+
+
+
+
+
+
+
+
+
+
         
 def generate_otp():
     digits = string.digits

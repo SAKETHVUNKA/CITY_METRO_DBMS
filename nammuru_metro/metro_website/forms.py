@@ -4,6 +4,9 @@ from .models import CustomUser
 class EntranceForm(forms.Form):
     ticketID = forms.CharField(label="ID", max_length=100)
 
+class ParkingForm(forms.Form):
+    parkingID = forms.CharField(label="Parking ID", max_length=100)
+
 class ExitForm(forms.Form):
     ticketID = forms.CharField(label="ID", max_length=100)
 

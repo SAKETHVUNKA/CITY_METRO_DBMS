@@ -50,7 +50,8 @@ main {
     border-radius: 10px;
     padding-top: 75px;
     padding-bottom: 50px;
-    padding-left: 75px;
+    padding-left: 50px;
+    padding-right: 50px;
     height: 70vh;
     display: flex;
     flex-direction: column;
@@ -59,25 +60,35 @@ main {
     text-align: center;
 }
 
-.details-container div {
+.details-container form {
+    width: 100%;
+    height: 30%;
+}
+
+.details-container form p {
     width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
 }
 
 .nested-button {
-    width: 30vw;
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
 
-select, input {
-    margin-left: -400px;
+#qr-code {
+    width: 100%;
+}
+
+input {
+    /* margin-left: -400px; */
     height: 35px;
-    width: 50%;
+    width: 90%;
     border: 1px solid rgb(189, 189, 189);
     box-shadow: inset 3px 3px 3px rgb(180, 180, 180);
     border-radius: 5px;
@@ -95,15 +106,4 @@ button {
 
 button:hover {
     background-color: #333;
-}
-
-.OTP-button {
-    color: black;
-    margin-left: 10px;
-    margin-right: 60px;
-    background-color: #dbd9d9;
-}
-
-.OTP-button:hover {
-    background-color: #b8b8b8;
 }
