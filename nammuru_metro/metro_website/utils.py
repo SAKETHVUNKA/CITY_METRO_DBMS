@@ -13,7 +13,7 @@ def getLineInfo(line_colour):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -35,7 +35,7 @@ def getLineInfo(line_colour):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
     cursor = conn.cursor()
@@ -61,7 +61,7 @@ def getStationInfo(station_name):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -96,7 +96,7 @@ def insert_user_and_rider_card(user_id, user_password, mobile_number, parking_id
         db_config = {
             "host": "127.0.0.1",
             "user": "root",
-            "password": "pass",
+            "password": "Saketh$12485",
             "database": "metro1"
         }
 
@@ -138,7 +138,7 @@ def find_routes(start_station, end_station):
     db = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -172,11 +172,12 @@ def find_routes(start_station, end_station):
         for i in range(len(path) - 1):
             total_price += G[path[i]][path[i+1]]['price']
             total_duration += G[path[i]][path[i+1]]['duration']
-
+            if total_price<10:
+                total_price=10
         path_details.append({
             "start_station": start_station,
             "end_station": end_station,
-            "stations_between": num_stations,
+            "stations_between": num_stations-1,
             "price": total_price,
             "duration": total_duration,
             "path": path
@@ -194,7 +195,7 @@ def fetch_card_details_by_user_id(user_id):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="pass",
+            password="Saketh$12485",
             database="metro1"
         )
 
@@ -227,7 +228,7 @@ def increment_card_balance(card_id, amount_to_add):
         conn = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="pass",
+            password="Saketh$12485",
             database="metro1"
         )
 
@@ -252,7 +253,7 @@ def check_balance(p_Ticket_Price, p_card_id):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -295,7 +296,7 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -340,7 +341,7 @@ def get_most_recent_ticket(user_id):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="pass",
+            password="Saketh$12485",
             database="metro1"
         )
 
@@ -392,7 +393,7 @@ def insert_parking(station_id, user_id, vehicle_number, fee):
     db = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -429,7 +430,7 @@ def fetch_parking_details(user_id):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="pass",
+            password="Saketh$12485",
             database="metro1"
         )
 
@@ -462,7 +463,7 @@ def check_train_line(start_station, end_station):
     connection = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -514,7 +515,7 @@ def find_nearest_station(start_station, start_line):
     connection = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -569,7 +570,7 @@ def display_updated_durations(schedule_updates, min_time):
     connection = mysql.connector.connect(
         host="127.0.1.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -630,7 +631,7 @@ def login_procedure(user_id, user_password):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="pass",
+            password="Saketh$12485",
             database="metro1"
         )
 
@@ -671,7 +672,7 @@ def update_exit_time(ticket_id):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -707,7 +708,7 @@ def update_entry_time(ticket_id):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
@@ -731,7 +732,7 @@ def update_parking_status(parking_id):
     db = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="pass",
+        password="Saketh$12485",
         database="metro1"
     )
 
