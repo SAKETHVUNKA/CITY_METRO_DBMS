@@ -583,7 +583,7 @@ def display_updated_durations(schedule_updates, min_time):
             platform_number = station[1]
             cursor = connection.cursor()
             # Fetch rows from the schedule table where the start station matches the station name in the list and time is greater than min_time
-            cursor.execute("SELECT * FROM schedule WHERE START_STATION = %s AND time_of_arrival > %s", (station_name, min_time))
+            cursor.execute("SELECT * FROM schedule WHERE START_STATION = %s AND time_of_arrival >= %s", (station_name, min_time))
             schedule_rows = cursor.fetchall()
             cursor.close()
 
