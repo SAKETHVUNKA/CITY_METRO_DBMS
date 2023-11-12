@@ -782,4 +782,36 @@ def send_otp_via_sms(phone_number, otp):
         body=f'Your OTP is: {otp}'
     )
     
-# Function to check user credentials and send OTP
+def retrieve_ticket_details(start_time, end_time, input_date):
+    connection = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="Saketh$12485",
+        database="metro1"
+    )
+
+    cursor = connection.cursor()
+
+    card_data = []
+    money_data = []
+
+    try:
+        cursor.callproc('DisplayTicketDetails', (start_time, end_time, input_date))
+
+        for result in cursor.stored_results():
+            data = result.fetchall()
+            columns = result.description
+            card_data.extend([row for row in data if isinstance(row[1], str)])
+            money_data.extend([row for row in data if not isinstance(row[1], str)])
+
+        card_table = pd.DataFrame(card_data, columns=[col[0] for col in columns])
+        money_table = pd.DataFrame(money_data, columns=[col[0] for col in columns])
+
+        return card_table, money_table
+
+    except mysql.connector.Error as error:
+        print("Error retrieving data:", error)
+        return None
+    finally:
+        cursor.close()
+        connection.close()
