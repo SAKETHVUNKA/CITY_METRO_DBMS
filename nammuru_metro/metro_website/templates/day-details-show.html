@@ -29,10 +29,10 @@
                 No Card Users
             </div>
             {% else %}
-            {% for row in card %}
             <div>
                 Card Users
             </div>
+            {% for row in card %}
             <div>
                 <div>{{ forloop.counter }}</div>
                 <div>Ticket ID: {{ row.Ticket_ID }}</div>
@@ -51,10 +51,10 @@
                 No Money Users
             </div>
             {% else %}
-            {% for row in money %}
             <div>
                 Money Users
             </div>
+            {% for row in money %}
             <div>
                 <div>{{ forloop.counter }}</div>
                 <div>Ticket ID: {{ row.Ticket_ID }}</div>
