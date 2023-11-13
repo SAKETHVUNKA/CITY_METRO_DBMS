@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'Styles/day-details-show.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'styles/logo.jpeg' %}" alt="Metro Logo">
+            </div>
+            <div class="metro-name">
+                Nammuru Metro
+            </div>
+            <div class="home-button">
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="/home_admin">Home</a>
+                {% else %}
+                <a href="/">Home</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="details-container"> 
+            {% if not card %}
+            <div>
+                No Card Users
+            </div>
+            {% else %}
+            {% for row in card %}
+            <div>
+                Card Users
+            </div>
+            <div>
+                <div>{{ forloop.counter }}</div>
+                <div>Ticket ID: {{ row.Ticket_ID }}</div>
+                <div>Card ID: {{ row.Card_ID }}</div>
+                <div>User ID: {{ row.User_ID }}</div>
+                <div>Mobile Number: {{ row.MOBILE_NUMBER }}</div>
+                <div>From: {{ row.Start_Station }}</div>
+                <div>To: {{ row.End_Station }}</div>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+
+            {% if not money %}
+            <div>
+                No Money Users
+            </div>
+            {% else %}
+            {% for row in money %}
+            <div>
+                Money Users
+            </div>
+            <div>
+                <div>{{ forloop.counter }}</div>
+                <div>Ticket ID: {{ row.Ticket_ID }}</div>
+                <div>From: {{ row.Start_Station }}</div>
+                <div>To: {{ row.End_Station }}</div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

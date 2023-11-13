@@ -13,7 +13,7 @@ def getLineInfo(line_colour):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -35,7 +35,7 @@ def getLineInfo(line_colour):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
     cursor = conn.cursor()
@@ -61,7 +61,7 @@ def getStationInfo(station_name):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -96,7 +96,7 @@ def insert_user_and_rider_card(user_id, user_password, mobile_number, parking_id
         db_config = {
             "host": "127.0.0.1",
             "user": "root",
-            "password": "Saketh$12485",
+            "password": "pass",
             "database": "metro1"
         }
 
@@ -138,7 +138,7 @@ def find_routes(start_station, end_station):
     db = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -195,7 +195,7 @@ def fetch_card_details_by_user_id(user_id):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="Saketh$12485",
+            password="pass",
             database="metro1"
         )
 
@@ -228,7 +228,7 @@ def increment_card_balance(card_id, amount_to_add):
         conn = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="Saketh$12485",
+            password="pass",
             database="metro1"
         )
 
@@ -253,7 +253,7 @@ def check_balance(p_Ticket_Price, p_card_id):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -296,7 +296,7 @@ def insert_ticket(p_Ticket_Price, p_Start_Station, p_End_Station, p_Mode_of_Purc
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -341,7 +341,7 @@ def get_most_recent_ticket(user_id):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="Saketh$12485",
+            password="pass",
             database="metro1"
         )
 
@@ -393,7 +393,7 @@ def insert_parking(station_id, user_id, vehicle_number, fee):
     db = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -430,7 +430,7 @@ def fetch_parking_details(user_id):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="Saketh$12485",
+            password="pass",
             database="metro1"
         )
 
@@ -463,7 +463,7 @@ def check_train_line(start_station, end_station):
     connection = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -515,7 +515,7 @@ def find_nearest_station(start_station, start_line):
     connection = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -570,7 +570,7 @@ def display_updated_durations(schedule_updates, min_time):
     connection = mysql.connector.connect(
         host="127.0.1.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -631,7 +631,7 @@ def login_procedure(user_id, user_password):
         connection = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="Saketh$12485",
+            password="pass",
             database="metro1"
         )
 
@@ -672,7 +672,7 @@ def update_exit_time(ticket_id):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -708,7 +708,7 @@ def update_entry_time(ticket_id):
     conn = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -732,7 +732,7 @@ def update_parking_status(parking_id):
     db = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 
@@ -766,27 +766,27 @@ def update_parking_status(parking_id):
 
 
         
-def generate_otp():
-    digits = string.digits
-    otp = ''.join(random.choice(digits) for _ in range(6))
-    return otp
+# def generate_otp():
+#     digits = string.digits
+#     otp = ''.join(random.choice(digits) for _ in range(6))
+#     return otp
 
-def send_otp_via_sms(phone_number, otp):
-    account_sid = 'AC53cbce7e65f2914a4e0c9682269d66c5'
-    auth_token = 'fea8f9651055e72642cd6a12d777d5fb'
-    client = Client(account_sid, auth_token)
+# def send_otp_via_sms(phone_number, otp):
+#     account_sid = 'AC53cbce7e65f2914a4e0c9682269d66c5'
+#     auth_token = 'fea8f9651055e72642cd6a12d777d5fb'
+#     client = Client(account_sid, auth_token)
 
-    message = client.messages.create(
-        to=phone_number,
-        from_='+12512570659',
-        body=f'Your OTP is: {otp}'
-    )
+#     message = client.messages.create(
+#         to=phone_number,
+#         from_='+12512570659',
+#         body=f'Your OTP is: {otp}'
+#     )
     
 def retrieve_ticket_details(start_time, end_time, input_date):
     connection = mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Saketh$12485",
+        password="pass",
         database="metro1"
     )
 

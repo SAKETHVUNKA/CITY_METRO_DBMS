@@ -340,3 +340,22 @@ def show_routes(request):
 
     return render(request, 'route-show.html', {'form': form})
 
+def day_details(request):
+    if request.method == 'POST':
+        form = DetailsForm(request.POST)
+        if form.is_valid():
+            startTime = form.cleaned_data['startTime']
+            endTime = form.cleaned_data['endTime']
+            detailsDate = form.cleaned_data['detailsDate']
+
+            card_table, money_table = retrieve_ticket_details(startTime, endTime, detailsDate)
+
+            card_table = card_table.to_dict(orient='records')
+            money_table = money_table.to_dict(orient='records')
+
+            return render(request, 'day-details-show.html', {'card': card_table, 'money':money_table})
+    else:
+        form = DetailsForm()
+
+    return render(request, 'day-details.html', {'form': form})
+

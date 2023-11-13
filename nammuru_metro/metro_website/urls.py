@@ -24,6 +24,7 @@ urlpatterns = [
     path('line_info/', views.line_info, name='line_info'),
     path('station_info/', views.station_info, name='station_info'),
     path('show_routes/', views.show_routes, name='show_routes'),
+    path('day_details/', views.day_details, name='day_details'),
 ]
 
 LOGIN_URL = 'login'
